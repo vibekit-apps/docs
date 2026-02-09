@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeKit Documentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .prose pre { background: #1e1e1e; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    .prose code { color: #e5e5e5; font-size: 0.9em; }
+    .sidebar { position: sticky; top: 2rem; }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <div class="min-h-screen flex">
+    <!-- Sidebar -->
+    <nav class="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
+      <div class="sidebar">
+        <a href="https://vibekit.bot" class="text-xl font-bold text-gray-900 mb-8 block">VibeKit</a>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Getting Started</h3>
+            <ul class="space-y-1">
+              <li><a href="#intro" class="text-gray-600 hover:text-gray-900">Introduction</a></li>
+              <li><a href="#quickstart" class="text-gray-600 hover:text-gray-900">Quickstart</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">API Reference</h3>
+            <ul class="space-y-1">
+              <li><a href="#auth" class="text-gray-600 hover:text-gray-900">Authentication</a></li>
+              <li><a href="#tasks" class="text-gray-600 hover:text-gray-900">Tasks</a></li>
+              <li><a href="#skills" class="text-gray-600 hover:text-gray-900">Skills</a></li>
+              <li><a href="#webhooks" class="text-gray-600 hover:text-gray-900">Webhooks</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Integrations</h3>
+            <ul class="space-y-1">
+              <li><a href="#cli" class="text-gray-600 hover:text-gray-900">CLI</a></li>
+              <li><a href="#mcp" class="text-gray-600 hover:text-gray-900">MCP Server</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-8 max-w-4xl">
+      <div class="prose prose-gray max-w-none">
+        <h1 id="intro">VibeKit Documentation</h1>
+        <p class="text-xl text-gray-600">Build and deploy full-stack apps with AI. One API call.</p>
+
+        <h2 id="quickstart">Quickstart</h2>
+        <p>Get your API key and deploy your first app in under 2 minutes.</p>
+
+        <h3>1. Get an API Key</h3>
+        <pre><code>curl -X POST https://vibekit.bot/api/v1/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"email": "you@example.com"}'</code></pre>
+
+        <h3>2. Submit a Task</h3>
+        <pre><code>curl -X POST https://vibekit.bot/api/v1/task \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"prompt": "Build a todo app with dark mode"}'</code></pre>
+
+        <h3>3. Check Status</h3>
+        <pre><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
+  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+
+        <hr class="my-12">
+
+        <h2 id="auth">Authentication</h2>
+        <p>All API requests require a Bearer token:</p>
+        <pre><code>Authorization: Bearer vk_your_api_key</code></pre>
+
+        <h3>Register (Get API Key)</h3>
+        <pre><code>POST /api/v1/auth/register
+Content-Type: application/json
+
+{"email": "you@example.com"}</code></pre>
+        <p>Returns your API key and $0.25 free credits.</p>
+
+        <hr class="my-12">
+
+        <h2 id="tasks">Tasks</h2>
+
+        <h3>Submit Task</h3>
+        <pre><code>POST /api/v1/task
+Authorization: Bearer YOUR_API_KEY
+Content-Type: application/json
+
+{
+  "prompt": "Build a landing page for a SaaS product",
+  "skills": ["solana"],
+  "projectId": "abc123",
+  "callbackUrl": "https://..."
+}</code></pre>
+
+        <h3>Get Task Status</h3>
+        <pre><code>GET /api/v1/task/:taskId</code></pre>
+        <pre><code>{
+  "taskId": "task_abc123",
+  "status": "complete",
+  "deployUrl": "https://...",
+  "repoUrl": "https://github.com/...",
+  "projectId": "abc123"
+}</code></pre>
+
+        <hr class="my-12">
+
+        <h2 id="skills">Skills</h2>
+        <p>Skills inject domain-specific knowledge into code generation.</p>
+        <pre><code>GET /api/v1/skills</code></pre>
+        <ul>
+          <li><strong>solana</strong> — Wallet connection, dApp development</li>
+        </ul>
+
+        <hr class="my-12">
+
+        <h2 id="webhooks">Webhooks</h2>
+        <p>Get notified when tasks complete. Include <code>callbackUrl</code> in your task.</p>
+        <pre><code>{
+  "taskId": "task_abc123",
+  "status": "complete",
+  "deployUrl": "https://...",
+  "repoUrl": "https://github.com/..."
+}</code></pre>
+        <p>Verify signature with <code>X-VibeKit-Signature</code> header (HMAC-SHA256 of body using API key).</p>
+
+        <hr class="my-12">
+
+        <h2 id="cli">CLI</h2>
+        <pre><code>npm install -g vibekit-cli
+vibekit login
+vibekit build "Create a blog with markdown support"
+vibekit status task_abc123</code></pre>
+
+        <hr class="my-12">
+
+        <h2 id="mcp">MCP Server</h2>
+        <pre><code>npm install -g vibekit-mcp</code></pre>
+        <p>Add to Claude Desktop config:</p>
+        <pre><code>{
+  "mcpServers": {
+    "vibekit": {
+      "command": "vibekit-mcp",
+      "env": {"VIBEKIT_API_KEY": "vk_your_key"}
+    }
+  }
+}</code></pre>
+
+        <hr class="my-12">
+
+        <h2>Rate Limits</h2>
+        <table class="w-full text-left">
+          <tr><th>Plan</th><th>Requests/min</th></tr>
+          <tr><td>Free</td><td>10</td></tr>
+          <tr><td>Pro ($9.99/mo)</td><td>30</td></tr>
+          <tr><td>Team ($29.99/mo)</td><td>60</td></tr>
+        </table>
+
+        <hr class="my-12">
+        <p class="text-gray-500 text-sm">Questions? <a href="https://discord.gg/clawd" class="text-blue-600">Discord</a></p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
