@@ -1,123 +1,156 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VibeKit Docs — Build Apps with AI</title>
   <meta name="description" content="API documentation for VibeKit. Build and deploy full-stack apps with one API call.">
+  <meta name="theme-color" content="#000000">
   <link rel="icon" href="https://vibekit.bot/favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
-      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
             sans: ['Inter', 'system-ui', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
-          },
-          colors: {
-            brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' }
+            marker: ['Permanent Marker', 'cursive'],
           }
         }
       }
     }
   </script>
   <style>
-    pre { border-radius: 0.75rem; overflow-x: auto; }
-    .light pre { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
-    .light pre code { color: #e2e8f0; }
-    .dark pre { background: linear-gradient(135deg, #0f172a 0%, #020617 100%); border: 1px solid #1e293b; }
-    .dark pre code { color: #e2e8f0; }
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+      opacity: 0.25;
+      z-index: -1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://vibekit.bot/public/bg.webp') center/cover no-repeat;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    body.bg-loaded::after { opacity: 0.25; }
+    body.bg-loaded::before { opacity: 0; }
+    
+    pre { 
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow-x: auto;
+      backdrop-filter: blur(10px);
+    }
+    pre code { color: #e2e8f0; }
     .code-keyword { color: #c084fc; }
     .code-string { color: #4ade80; }
     .code-comment { color: #64748b; }
-    .nav-link { transition: all 0.15s; }
-    .nav-link:hover { transform: translateX(4px); }
-    .section-card { transition: all 0.2s; }
-    .section-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
-    .dark .section-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
-    .theme-toggle { cursor: pointer; transition: all 0.2s; }
-    .theme-toggle:hover { transform: scale(1.1); }
+    .nav-link { transition: all 0.15s; color: #888; }
+    .nav-link:hover { transform: translateX(4px); color: #fff; }
+    .section-card { 
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #222;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .section-card:hover { 
+      background: rgba(255, 255, 255, 0.06);
+      border-color: #444;
+    }
+    .header-glass {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #222;
+    }
+    .sidebar-glass {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid #222;
+    }
+    .badge-get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
+    .badge-post { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .text-muted { color: #777; }
+    .text-secondary { color: #aaa; }
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      transition: all 0.2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+    }
   </style>
   <script>
-    // Check for saved theme or default to dark
-    if (localStorage.theme === 'light') {
-      document.documentElement.classList.remove('dark');
-      document.documentElement.classList.add('light');
-    } else {
-      document.documentElement.classList.add('dark');
-      document.documentElement.classList.remove('light');
-    }
-    function toggleTheme() {
-      if (document.documentElement.classList.contains('dark')) {
-        document.documentElement.classList.remove('dark');
-        document.documentElement.classList.add('light');
-        localStorage.theme = 'light';
-      } else {
-        document.documentElement.classList.remove('light');
-        document.documentElement.classList.add('dark');
-        localStorage.theme = 'dark';
-      }
-    }
+    // Load background image
+    window.addEventListener('load', function() {
+      const img = new Image();
+      img.onload = function() { document.body.classList.add('bg-loaded'); };
+      img.src = 'https://vibekit.bot/public/bg.webp';
+    });
   </script>
 </head>
-<body class="bg-slate-50 dark:bg-slate-950 font-sans antialiased transition-colors duration-200">
+<body class="font-sans antialiased min-h-screen">
   <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg border-b border-slate-200 dark:border-slate-800 z-50">
+  <header class="fixed top-0 left-0 right-0 header-glass z-50">
     <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
       <a href="https://vibekit.bot" class="flex items-center gap-3">
         <img src="https://vibekit.bot/public/Group2.png" alt="VibeKit" class="w-8 h-8">
-        <span class="font-semibold text-slate-900 dark:text-white">VibeKit</span>
-        <span class="text-slate-400 font-normal">Docs</span>
+        <span class="font-marker text-xl text-white">VibeKit</span>
+        <span class="text-muted">Docs</span>
       </a>
-      <div class="flex items-center gap-4">
-        <button onclick="toggleTheme()" class="theme-toggle p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800" title="Toggle theme">
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="w-5 h-5 text-slate-600 dark:text-slate-300 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="w-5 h-5 text-slate-600 dark:text-slate-300 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
-          </svg>
-        </button>
-        <a href="https://vibekit.bot" class="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">Home</a>
-        <a href="https://github.com/609NFT/vibekit" class="text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white">GitHub</a>
-        <a href="https://vibekit.bot" class="text-sm bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition">Get API Key</a>
+      <div class="flex items-center gap-6">
+        <a href="https://vibekit.bot" class="text-sm text-muted hover:text-white transition">Home</a>
+        <a href="https://github.com/609NFT/vibekit" class="text-sm text-muted hover:text-white transition">GitHub</a>
+        <a href="https://vibekit.bot" class="btn-primary text-sm text-white px-4 py-2 rounded-lg">Get API Key</a>
       </div>
     </div>
   </header>
 
   <div class="flex pt-16">
     <!-- Sidebar -->
-    <nav class="w-64 fixed left-0 top-16 bottom-0 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-6 overflow-y-auto hidden lg:block">
+    <nav class="w-64 fixed left-0 top-16 bottom-0 sidebar-glass p-6 overflow-y-auto hidden lg:block">
       <div class="space-y-8">
         <div>
-          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Getting Started</h3>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Getting Started</h3>
           <ul class="space-y-1">
-            <li><a href="#intro" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Introduction</a></li>
-            <li><a href="#quickstart" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Quickstart</a></li>
+            <li><a href="#intro" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Introduction</a></li>
+            <li><a href="#quickstart" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Quickstart</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">API Reference</h3>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">API Reference</h3>
           <ul class="space-y-1">
-            <li><a href="#auth" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Authentication</a></li>
-            <li><a href="#tasks" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Tasks</a></li>
-            <li><a href="#skills" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Skills</a></li>
-            <li><a href="#webhooks" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Webhooks</a></li>
-            <li><a href="#limits" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">Rate Limits</a></li>
+            <li><a href="#auth" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Authentication</a></li>
+            <li><a href="#tasks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Tasks</a></li>
+            <li><a href="#skills" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Skills</a></li>
+            <li><a href="#webhooks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Webhooks</a></li>
+            <li><a href="#limits" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Rate Limits</a></li>
           </ul>
         </div>
         <div>
-          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Tools</h3>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Tools</h3>
           <ul class="space-y-1">
-            <li><a href="#cli" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">CLI</a></li>
-            <li><a href="#mcp" class="nav-link block py-1.5 px-3 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 rounded-lg hover:bg-brand-50 dark:hover:bg-brand-900/20">MCP Server</a></li>
+            <li><a href="#cli" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">CLI</a></li>
+            <li><a href="#mcp" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">MCP Server</a></li>
           </ul>
         </div>
       </div>
@@ -129,39 +162,39 @@
         
         <!-- Hero -->
         <section id="intro" class="mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 rounded-full text-sm font-medium mb-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-4" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">
             <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
             API v1
           </div>
-          <h1 class="text-4xl font-bold text-slate-900 dark:text-white mb-4">VibeKit Documentation</h1>
-          <p class="text-xl text-slate-600 dark:text-slate-300 leading-relaxed">Build and deploy full-stack apps with AI. One API call, live URL in minutes.</p>
+          <h1 class="text-4xl font-bold mb-4 text-white">VibeKit Documentation</h1>
+          <p class="text-xl text-secondary leading-relaxed">Build and deploy full-stack apps with AI. One API call, live URL in minutes.</p>
         </section>
 
         <!-- Quickstart -->
         <section id="quickstart" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-            <span class="w-8 h-8 bg-brand-100 dark:bg-brand-900/50 text-brand-600 dark:text-brand-400 rounded-lg flex items-center justify-center text-sm">1</span>
+          <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+            <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">1</span>
             Quickstart
           </h2>
           
           <div class="space-y-6">
-            <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-              <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Get an API Key</h3>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Get an API Key</h3>
               <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/auth/register \
   -H <span class="code-string">"Content-Type: application/json"</span> \
   -d <span class="code-string">'{"email": "you@example.com"}'</span></code></pre>
             </div>
 
-            <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-              <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Submit a Task</h3>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Submit a Task</h3>
               <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/task \
   -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
   -H <span class="code-string">"Content-Type: application/json"</span> \
   -d <span class="code-string">'{"prompt": "Build a todo app with dark mode"}'</span></code></pre>
             </div>
 
-            <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-              <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Check Status & Get URL</h3>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Check Status & Get URL</h3>
               <pre class="p-4 font-mono text-sm"><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
   -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span></code></pre>
             </div>
@@ -170,31 +203,31 @@
 
         <!-- Authentication -->
         <section id="auth" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Authentication</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-            <p class="text-slate-600 dark:text-slate-300 mb-4">All API requests require a Bearer token in the Authorization header:</p>
+          <h2 class="text-2xl font-bold mb-6 text-white">Authentication</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">All API requests require a Bearer token in the Authorization header:</p>
             <pre class="p-4 font-mono text-sm mb-6"><code>Authorization: Bearer vk_your_api_key</code></pre>
             
-            <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Register</h3>
+            <h3 class="font-semibold mb-3 text-white">Register</h3>
             <div class="flex items-center gap-2 mb-3">
-              <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-mono rounded">POST</span>
-              <code class="text-sm font-mono text-slate-600 dark:text-slate-400">/api/v1/auth/register</code>
+              <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+              <code class="text-sm font-mono text-muted">/api/v1/auth/register</code>
             </div>
             <pre class="p-4 font-mono text-sm"><code>{<span class="code-string">"email"</span>: <span class="code-string">"you@example.com"</span>}</code></pre>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-3">Returns your API key + $0.25 free credits.</p>
+            <p class="text-sm mt-3 text-muted">Returns your API key + $0.25 free credits.</p>
           </div>
         </section>
 
         <!-- Tasks -->
         <section id="tasks" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Tasks</h2>
+          <h2 class="text-2xl font-bold mb-6 text-white">Tasks</h2>
           
           <div class="space-y-6">
-            <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-              <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Submit Task</h3>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Submit Task</h3>
               <div class="flex items-center gap-2 mb-3">
-                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-mono rounded">POST</span>
-                <code class="text-sm font-mono text-slate-600 dark:text-slate-400">/api/v1/task</code>
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/task</code>
               </div>
               <pre class="p-4 font-mono text-sm"><code>{
   <span class="code-string">"prompt"</span>: <span class="code-string">"Build a landing page"</span>,
@@ -204,11 +237,11 @@
 }</code></pre>
             </div>
 
-            <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-              <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Get Task Status</h3>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Get Task Status</h3>
               <div class="flex items-center gap-2 mb-3">
-                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-mono rounded">GET</span>
-                <code class="text-sm font-mono text-slate-600 dark:text-slate-400">/api/v1/task/:taskId</code>
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/task/:taskId</code>
               </div>
               <pre class="p-4 font-mono text-sm"><code>{
   <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
@@ -223,17 +256,17 @@
 
         <!-- Skills -->
         <section id="skills" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Skills</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-            <p class="text-slate-600 dark:text-slate-300 mb-4">Skills inject domain-specific knowledge into code generation.</p>
+          <h2 class="text-2xl font-bold mb-6 text-white">Skills</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Skills inject domain-specific knowledge into code generation.</p>
             <div class="flex items-center gap-2 mb-4">
-              <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-mono rounded">GET</span>
-              <code class="text-sm font-mono text-slate-600 dark:text-slate-400">/api/v1/skills</code>
+              <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+              <code class="text-sm font-mono text-muted">/api/v1/skills</code>
             </div>
-            <div class="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4">
+            <div class="rounded-lg p-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
               <div class="flex items-center gap-3">
-                <span class="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-medium rounded">solana</span>
-                <span class="text-slate-600 dark:text-slate-300 text-sm">Wallet connection, dApp development, Anchor programs</span>
+                <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">solana</span>
+                <span class="text-sm text-secondary">Wallet connection, dApp development, Anchor programs</span>
               </div>
             </div>
           </div>
@@ -241,37 +274,37 @@
 
         <!-- Webhooks -->
         <section id="webhooks" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Webhooks</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-            <p class="text-slate-600 dark:text-slate-300 mb-4">Get notified when tasks complete. Include <code class="bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded text-sm">callbackUrl</code> in your task submission.</p>
+          <h2 class="text-2xl font-bold mb-6 text-white">Webhooks</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Get notified when tasks complete. Include <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">callbackUrl</code> in your task submission.</p>
             <pre class="p-4 font-mono text-sm mb-4"><code>{
   <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
   <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,
   <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://..."</span>,
   <span class="code-string">"repoUrl"</span>: <span class="code-string">"https://github.com/..."</span>
 }</code></pre>
-            <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-              <p class="text-sm text-amber-800 dark:text-amber-200"><strong>Signature Verification:</strong> Webhooks include <code class="bg-amber-100 dark:bg-amber-900/50 px-1 rounded">X-VibeKit-Signature</code> header. Verify with HMAC-SHA256 using your API key.</p>
+            <div class="rounded-lg p-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3)">
+              <p class="text-sm" style="color: #fbbf24;"><strong>Signature Verification:</strong> Webhooks include <code class="px-1 rounded" style="background: rgba(251, 191, 36, 0.2)">X-VibeKit-Signature</code> header. Verify with HMAC-SHA256 using your API key.</p>
             </div>
           </div>
         </section>
 
         <!-- Rate Limits -->
         <section id="limits" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Rate Limits</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+          <h2 class="text-2xl font-bold mb-6 text-white">Rate Limits</h2>
+          <div class="section-card rounded-xl overflow-hidden">
             <table class="w-full">
-              <thead class="bg-slate-50 dark:bg-slate-800/50">
+              <thead style="background: rgba(255,255,255,0.03)">
                 <tr>
-                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Plan</th>
-                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Requests/min</th>
-                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase">Price</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Plan</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Requests/min</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Price</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                <tr><td class="px-6 py-4 text-slate-900 dark:text-white">Free</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">10</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">$0</td></tr>
-                <tr><td class="px-6 py-4 text-slate-900 dark:text-white">Pro</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">30</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">$9.99/mo</td></tr>
-                <tr><td class="px-6 py-4 text-slate-900 dark:text-white">Team</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">60</td><td class="px-6 py-4 text-slate-600 dark:text-slate-300">$29.99/mo</td></tr>
+              <tbody>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Free</td><td class="px-6 py-4 text-secondary">10</td><td class="px-6 py-4 text-secondary">$0</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Pro</td><td class="px-6 py-4 text-secondary">30</td><td class="px-6 py-4 text-secondary">$9.99/mo</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Team</td><td class="px-6 py-4 text-secondary">60</td><td class="px-6 py-4 text-secondary">$29.99/mo</td></tr>
               </tbody>
             </table>
           </div>
@@ -279,8 +312,8 @@
 
         <!-- CLI -->
         <section id="cli" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">CLI</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
+          <h2 class="text-2xl font-bold mb-6 text-white">CLI</h2>
+          <div class="section-card rounded-xl p-6">
             <pre class="p-4 font-mono text-sm"><code><span class="code-comment"># Install</span>
 npm install -g vibekit-cli
 
@@ -297,11 +330,11 @@ vibekit status task_abc123</code></pre>
 
         <!-- MCP -->
         <section id="mcp" class="mb-16">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">MCP Server</h2>
-          <div class="section-card bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6">
-            <p class="text-slate-600 dark:text-slate-300 mb-4">Use VibeKit as an MCP tool with Claude Desktop.</p>
+          <h2 class="text-2xl font-bold mb-6 text-white">MCP Server</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Use VibeKit as an MCP tool with Claude Desktop.</p>
             <pre class="p-4 font-mono text-sm mb-4"><code>npm install -g vibekit-mcp</code></pre>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mb-3">Add to Claude Desktop config:</p>
+            <p class="text-sm mb-3 text-muted">Add to Claude Desktop config:</p>
             <pre class="p-4 font-mono text-sm"><code>{
   <span class="code-string">"mcpServers"</span>: {
     <span class="code-string">"vibekit"</span>: {
@@ -314,13 +347,13 @@ vibekit status task_abc123</code></pre>
         </section>
 
         <!-- Footer -->
-        <footer class="border-t border-slate-200 dark:border-slate-800 pt-8 mt-16">
-          <div class="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+        <footer class="pt-8 mt-16" style="border-top: 1px solid #222">
+          <div class="flex items-center justify-between text-sm text-muted">
             <p>© 2026 VibeKit</p>
             <div class="flex items-center gap-4">
-              <a href="https://discord.gg/clawd" class="hover:text-slate-900 dark:hover:text-white">Discord</a>
-              <a href="https://github.com/609NFT/vibekit" class="hover:text-slate-900 dark:hover:text-white">GitHub</a>
-              <a href="mailto:support@vibekit.bot" class="hover:text-slate-900 dark:hover:text-white">Support</a>
+              <a href="https://discord.gg/clawd" class="hover:text-white transition">Discord</a>
+              <a href="https://github.com/609NFT/vibekit" class="hover:text-white transition">GitHub</a>
+              <a href="mailto:support@vibekit.bot" class="hover:text-white transition">Support</a>
             </div>
           </div>
         </footer>
