@@ -1,168 +1,294 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VibeKit Documentation</title>
+  <title>VibeKit Docs — Build Apps with AI</title>
+  <meta name="description" content="API documentation for VibeKit. Build and deploy full-stack apps with one API call.">
+  <link rel="icon" href="https://vibekit.bot/favicon.ico">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: { 50: '#f0f9ff', 100: '#e0f2fe', 500: '#0ea5e9', 600: '#0284c7', 700: '#0369a1' }
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    .prose pre { background: #1e1e1e; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
-    .prose code { color: #e5e5e5; font-size: 0.9em; }
-    .sidebar { position: sticky; top: 2rem; }
+    pre { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 1px solid #334155; }
+    pre code { color: #e2e8f0; }
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #4ade80; }
+    .code-comment { color: #64748b; }
+    .nav-link { transition: all 0.15s; }
+    .nav-link:hover { transform: translateX(4px); }
+    .section-card { transition: all 0.2s; }
+    .section-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
   </style>
 </head>
-<body class="bg-gray-50">
-  <div class="min-h-screen flex">
+<body class="bg-slate-50 font-sans antialiased">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-lg border-b border-slate-200 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="https://vibekit.bot" class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-gradient-to-br from-brand-500 to-brand-700 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold text-sm">V</span>
+        </div>
+        <span class="font-semibold text-slate-900">VibeKit</span>
+        <span class="text-slate-400 font-normal">Docs</span>
+      </a>
+      <div class="flex items-center gap-4">
+        <a href="https://vibekit.bot" class="text-sm text-slate-600 hover:text-slate-900">Home</a>
+        <a href="https://github.com/609NFT/vibekit" class="text-sm text-slate-600 hover:text-slate-900">GitHub</a>
+        <a href="https://vibekit.bot/api/v1/auth/register" class="text-sm bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition">Get API Key</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-16">
     <!-- Sidebar -->
-    <nav class="w-64 bg-white border-r border-gray-200 p-6 hidden md:block">
-      <div class="sidebar">
-        <a href="https://vibekit.bot" class="text-xl font-bold text-gray-900 mb-8 block">VibeKit</a>
-        <div class="space-y-6">
-          <div>
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Getting Started</h3>
-            <ul class="space-y-1">
-              <li><a href="#intro" class="text-gray-600 hover:text-gray-900">Introduction</a></li>
-              <li><a href="#quickstart" class="text-gray-600 hover:text-gray-900">Quickstart</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">API Reference</h3>
-            <ul class="space-y-1">
-              <li><a href="#auth" class="text-gray-600 hover:text-gray-900">Authentication</a></li>
-              <li><a href="#tasks" class="text-gray-600 hover:text-gray-900">Tasks</a></li>
-              <li><a href="#skills" class="text-gray-600 hover:text-gray-900">Skills</a></li>
-              <li><a href="#webhooks" class="text-gray-600 hover:text-gray-900">Webhooks</a></li>
-            </ul>
-          </div>
-          <div>
-            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Integrations</h3>
-            <ul class="space-y-1">
-              <li><a href="#cli" class="text-gray-600 hover:text-gray-900">CLI</a></li>
-              <li><a href="#mcp" class="text-gray-600 hover:text-gray-900">MCP Server</a></li>
-            </ul>
-          </div>
+    <nav class="w-64 fixed left-0 top-16 bottom-0 bg-white border-r border-slate-200 p-6 overflow-y-auto hidden lg:block">
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Getting Started</h3>
+          <ul class="space-y-1">
+            <li><a href="#intro" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Introduction</a></li>
+            <li><a href="#quickstart" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Quickstart</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">API Reference</h3>
+          <ul class="space-y-1">
+            <li><a href="#auth" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Authentication</a></li>
+            <li><a href="#tasks" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Tasks</a></li>
+            <li><a href="#skills" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Skills</a></li>
+            <li><a href="#webhooks" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Webhooks</a></li>
+            <li><a href="#limits" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">Rate Limits</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Tools</h3>
+          <ul class="space-y-1">
+            <li><a href="#cli" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">CLI</a></li>
+            <li><a href="#mcp" class="nav-link block py-1.5 px-3 text-slate-600 hover:text-brand-600 rounded-lg hover:bg-brand-50">MCP Server</a></li>
+          </ul>
         </div>
       </div>
     </nav>
 
     <!-- Main Content -->
-    <main class="flex-1 p-8 max-w-4xl">
-      <div class="prose prose-gray max-w-none">
-        <h1 id="intro">VibeKit Documentation</h1>
-        <p class="text-xl text-gray-600">Build and deploy full-stack apps with AI. One API call.</p>
+    <main class="flex-1 lg:ml-64 min-h-screen">
+      <div class="max-w-3xl mx-auto px-6 py-12">
+        
+        <!-- Hero -->
+        <section id="intro" class="mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 bg-brand-50 text-brand-700 rounded-full text-sm font-medium mb-4">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            API v1
+          </div>
+          <h1 class="text-4xl font-bold text-slate-900 mb-4">VibeKit Documentation</h1>
+          <p class="text-xl text-slate-600 leading-relaxed">Build and deploy full-stack apps with AI. One API call, live URL in minutes.</p>
+        </section>
 
-        <h2 id="quickstart">Quickstart</h2>
-        <p>Get your API key and deploy your first app in under 2 minutes.</p>
+        <!-- Quickstart -->
+        <section id="quickstart" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+            <span class="w-8 h-8 bg-brand-100 text-brand-600 rounded-lg flex items-center justify-center text-sm">1</span>
+            Quickstart
+          </h2>
+          
+          <div class="space-y-6">
+            <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+              <h3 class="font-semibold text-slate-900 mb-3">Get an API Key</h3>
+              <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/auth/register \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{"email": "you@example.com"}'</span></code></pre>
+            </div>
 
-        <h3>1. Get an API Key</h3>
-        <pre><code>curl -X POST https://vibekit.bot/api/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{"email": "you@example.com"}'</code></pre>
+            <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+              <h3 class="font-semibold text-slate-900 mb-3">Submit a Task</h3>
+              <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/task \
+  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{"prompt": "Build a todo app with dark mode"}'</span></code></pre>
+            </div>
 
-        <h3>2. Submit a Task</h3>
-        <pre><code>curl -X POST https://vibekit.bot/api/v1/task \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Build a todo app with dark mode"}'</code></pre>
+            <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+              <h3 class="font-semibold text-slate-900 mb-3">Check Status & Get URL</h3>
+              <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
+  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span></code></pre>
+            </div>
+          </div>
+        </section>
 
-        <h3>3. Check Status</h3>
-        <pre><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
-  -H "Authorization: Bearer YOUR_API_KEY"</code></pre>
+        <!-- Authentication -->
+        <section id="auth" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Authentication</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-slate-600 mb-4">All API requests require a Bearer token in the Authorization header:</p>
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm mb-6"><code>Authorization: Bearer vk_your_api_key</code></pre>
+            
+            <h3 class="font-semibold text-slate-900 mb-3">Register</h3>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-mono rounded">POST</span>
+              <code class="text-sm font-mono text-slate-600">/api/v1/auth/register</code>
+            </div>
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>{<span class="code-string">"email"</span>: <span class="code-string">"you@example.com"</span>}</code></pre>
+            <p class="text-sm text-slate-500 mt-3">Returns your API key + $0.25 free credits.</p>
+          </div>
+        </section>
 
-        <hr class="my-12">
-
-        <h2 id="auth">Authentication</h2>
-        <p>All API requests require a Bearer token:</p>
-        <pre><code>Authorization: Bearer vk_your_api_key</code></pre>
-
-        <h3>Register (Get API Key)</h3>
-        <pre><code>POST /api/v1/auth/register
-Content-Type: application/json
-
-{"email": "you@example.com"}</code></pre>
-        <p>Returns your API key and $0.25 free credits.</p>
-
-        <hr class="my-12">
-
-        <h2 id="tasks">Tasks</h2>
-
-        <h3>Submit Task</h3>
-        <pre><code>POST /api/v1/task
-Authorization: Bearer YOUR_API_KEY
-Content-Type: application/json
-
-{
-  "prompt": "Build a landing page for a SaaS product",
-  "skills": ["solana"],
-  "projectId": "abc123",
-  "callbackUrl": "https://..."
+        <!-- Tasks -->
+        <section id="tasks" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Tasks</h2>
+          
+          <div class="space-y-6">
+            <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+              <h3 class="font-semibold text-slate-900 mb-3">Submit Task</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-slate-600">/api/v1/task</code>
+              </div>
+              <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>{
+  <span class="code-string">"prompt"</span>: <span class="code-string">"Build a landing page"</span>,
+  <span class="code-string">"skills"</span>: [<span class="code-string">"solana"</span>],        <span class="code-comment">// optional</span>
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>,      <span class="code-comment">// optional: iterate</span>
+  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://..."</span> <span class="code-comment">// optional: webhook</span>
 }</code></pre>
+            </div>
 
-        <h3>Get Task Status</h3>
-        <pre><code>GET /api/v1/task/:taskId</code></pre>
-        <pre><code>{
-  "taskId": "task_abc123",
-  "status": "complete",
-  "deployUrl": "https://...",
-  "repoUrl": "https://github.com/...",
-  "projectId": "abc123"
+            <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+              <h3 class="font-semibold text-slate-900 mb-3">Get Task Status</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-slate-600">/api/v1/task/:taskId</code>
+              </div>
+              <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>{
+  <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,  <span class="code-comment">// pending | running | complete | error</span>
+  <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://..."</span>,
+  <span class="code-string">"repoUrl"</span>: <span class="code-string">"https://github.com/..."</span>,
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>
 }</code></pre>
+            </div>
+          </div>
+        </section>
 
-        <hr class="my-12">
+        <!-- Skills -->
+        <section id="skills" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Skills</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-slate-600 mb-4">Skills inject domain-specific knowledge into code generation.</p>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-mono rounded">GET</span>
+              <code class="text-sm font-mono text-slate-600">/api/v1/skills</code>
+            </div>
+            <div class="bg-slate-50 rounded-lg p-4">
+              <div class="flex items-center gap-3">
+                <span class="px-2 py-1 bg-purple-100 text-purple-700 text-xs font-medium rounded">solana</span>
+                <span class="text-slate-600 text-sm">Wallet connection, dApp development, Anchor programs</span>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <h2 id="skills">Skills</h2>
-        <p>Skills inject domain-specific knowledge into code generation.</p>
-        <pre><code>GET /api/v1/skills</code></pre>
-        <ul>
-          <li><strong>solana</strong> — Wallet connection, dApp development</li>
-        </ul>
-
-        <hr class="my-12">
-
-        <h2 id="webhooks">Webhooks</h2>
-        <p>Get notified when tasks complete. Include <code>callbackUrl</code> in your task.</p>
-        <pre><code>{
-  "taskId": "task_abc123",
-  "status": "complete",
-  "deployUrl": "https://...",
-  "repoUrl": "https://github.com/..."
+        <!-- Webhooks -->
+        <section id="webhooks" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Webhooks</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-slate-600 mb-4">Get notified when tasks complete. Include <code class="bg-slate-100 px-1.5 py-0.5 rounded text-sm">callbackUrl</code> in your task submission.</p>
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm mb-4"><code>{
+  <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,
+  <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://..."</span>,
+  <span class="code-string">"repoUrl"</span>: <span class="code-string">"https://github.com/..."</span>
 }</code></pre>
-        <p>Verify signature with <code>X-VibeKit-Signature</code> header (HMAC-SHA256 of body using API key).</p>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <p class="text-sm text-amber-800"><strong>Signature Verification:</strong> Webhooks include <code class="bg-amber-100 px-1 rounded">X-VibeKit-Signature</code> header. Verify with HMAC-SHA256 using your API key.</p>
+            </div>
+          </div>
+        </section>
 
-        <hr class="my-12">
+        <!-- Rate Limits -->
+        <section id="limits" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">Rate Limits</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 overflow-hidden">
+            <table class="w-full">
+              <thead class="bg-slate-50">
+                <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Plan</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Requests/min</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold text-slate-500 uppercase">Price</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr><td class="px-6 py-4 text-slate-900">Free</td><td class="px-6 py-4 text-slate-600">10</td><td class="px-6 py-4 text-slate-600">$0</td></tr>
+                <tr><td class="px-6 py-4 text-slate-900">Pro</td><td class="px-6 py-4 text-slate-600">30</td><td class="px-6 py-4 text-slate-600">$9.99/mo</td></tr>
+                <tr><td class="px-6 py-4 text-slate-900">Team</td><td class="px-6 py-4 text-slate-600">60</td><td class="px-6 py-4 text-slate-600">$29.99/mo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-        <h2 id="cli">CLI</h2>
-        <pre><code>npm install -g vibekit-cli
+        <!-- CLI -->
+        <section id="cli" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">CLI</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code><span class="code-comment"># Install</span>
+npm install -g vibekit-cli
+
+<span class="code-comment"># Login</span>
 vibekit login
-vibekit build "Create a blog with markdown support"
+
+<span class="code-comment"># Build something</span>
+vibekit build <span class="code-string">"Create a blog with markdown"</span>
+
+<span class="code-comment"># Check status</span>
 vibekit status task_abc123</code></pre>
+          </div>
+        </section>
 
-        <hr class="my-12">
-
-        <h2 id="mcp">MCP Server</h2>
-        <pre><code>npm install -g vibekit-mcp</code></pre>
-        <p>Add to Claude Desktop config:</p>
-        <pre><code>{
-  "mcpServers": {
-    "vibekit": {
-      "command": "vibekit-mcp",
-      "env": {"VIBEKIT_API_KEY": "vk_your_key"}
+        <!-- MCP -->
+        <section id="mcp" class="mb-16">
+          <h2 class="text-2xl font-bold text-slate-900 mb-6">MCP Server</h2>
+          <div class="section-card bg-white rounded-xl border border-slate-200 p-6">
+            <p class="text-slate-600 mb-4">Use VibeKit as an MCP tool with Claude Desktop.</p>
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm mb-4"><code>npm install -g vibekit-mcp</code></pre>
+            <p class="text-sm text-slate-500 mb-3">Add to Claude Desktop config:</p>
+            <pre class="rounded-xl p-4 overflow-x-auto font-mono text-sm"><code>{
+  <span class="code-string">"mcpServers"</span>: {
+    <span class="code-string">"vibekit"</span>: {
+      <span class="code-string">"command"</span>: <span class="code-string">"vibekit-mcp"</span>,
+      <span class="code-string">"env"</span>: {<span class="code-string">"VIBEKIT_API_KEY"</span>: <span class="code-string">"vk_..."</span>}
     }
   }
 }</code></pre>
+          </div>
+        </section>
 
-        <hr class="my-12">
+        <!-- Footer -->
+        <footer class="border-t border-slate-200 pt-8 mt-16">
+          <div class="flex items-center justify-between text-sm text-slate-500">
+            <p>© 2026 VibeKit</p>
+            <div class="flex items-center gap-4">
+              <a href="https://discord.gg/clawd" class="hover:text-slate-900">Discord</a>
+              <a href="https://github.com/609NFT/vibekit" class="hover:text-slate-900">GitHub</a>
+              <a href="mailto:support@vibekit.bot" class="hover:text-slate-900">Support</a>
+            </div>
+          </div>
+        </footer>
 
-        <h2>Rate Limits</h2>
-        <table class="w-full text-left">
-          <tr><th>Plan</th><th>Requests/min</th></tr>
-          <tr><td>Free</td><td>10</td></tr>
-          <tr><td>Pro ($9.99/mo)</td><td>30</td></tr>
-          <tr><td>Team ($29.99/mo)</td><td>60</td></tr>
-        </table>
-
-        <hr class="my-12">
-        <p class="text-gray-500 text-sm">Questions? <a href="https://discord.gg/clawd" class="text-blue-600">Discord</a></p>
       </div>
     </main>
   </div>
