@@ -86,17 +86,50 @@
       backdrop-filter: blur(12px);
       border-right: 1px solid #222;
     }
-    .badge-get { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-    .badge-post { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+    .badge-get { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-post { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .accent-badge {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
     .text-muted { color: #777; }
     .text-secondary { color: #aaa; }
-    .btn-primary {
-      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
       transition: all 0.2s;
     }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(14, 165, 233, 0.3);
+    .cta-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      50%, 100% { left: 150%; }
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+    }
+    .cta-button svg {
+      width: 16px;
+      height: 16px;
     }
   </style>
   <script>
@@ -120,7 +153,10 @@
       <div class="flex items-center gap-6">
         <a href="https://vibekit.bot" class="text-sm text-muted hover:text-white transition">Home</a>
         <a href="https://github.com/609NFT/vibekit" class="text-sm text-muted hover:text-white transition">GitHub</a>
-        <a href="https://vibekit.bot" class="btn-primary text-sm text-white px-4 py-2 rounded-lg">Get API Key</a>
+        <a href="#quickstart" class="cta-button">
+          Get API Key
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
       </div>
     </div>
   </header>
@@ -162,8 +198,8 @@
         
         <!-- Hero -->
         <section id="intro" class="mb-16">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-4" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">
-            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-4" style="background: rgba(255, 255, 255, 0.08); color: #fff;">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
             API v1
           </div>
           <h1 class="text-4xl font-bold mb-4 text-white">VibeKit Documentation</h1>
@@ -173,7 +209,7 @@
         <!-- Quickstart -->
         <section id="quickstart" class="mb-16">
           <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
-            <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm" style="background: rgba(14, 165, 233, 0.15); color: #38bdf8;">1</span>
+            <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm accent-badge">1</span>
             Quickstart
           </h2>
           
