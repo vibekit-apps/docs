@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VibeKit Docs — Build Apps with AI</title>
+  <meta name="description" content="API documentation for VibeKit. Build and deploy full-stack apps with one API call.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="https://vibekit.bot/favicon.ico">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Permanent+Marker&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            marker: ['Permanent Marker', 'cursive'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      line-height: 1.6;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+      opacity: 0.25;
+      z-index: -1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: url('https://vibekit.bot/public/bg.webp') center/cover no-repeat;
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.5s ease-in-out;
+    }
+    body.bg-loaded::after { opacity: 0.25; }
+    body.bg-loaded::before { opacity: 0; }
+    
+    pre { 
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #333;
+      border-radius: 12px;
+      overflow-x: auto;
+      backdrop-filter: blur(10px);
+    }
+    pre code { color: #e2e8f0; }
+    .code-keyword { color: #c084fc; }
+    .code-string { color: #4ade80; }
+    .code-comment { color: #64748b; }
+    .nav-link { transition: all 0.15s; color: #888; }
+    .nav-link:hover { transform: translateX(4px); color: #fff; }
+    .section-card { 
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid #222;
+      backdrop-filter: blur(10px);
+      transition: all 0.2s;
+    }
+    .section-card:hover { 
+      background: rgba(255, 255, 255, 0.06);
+      border-color: #444;
+    }
+    .header-glass {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #222;
+    }
+    .sidebar-glass {
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid #222;
+    }
+    .badge-get { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .badge-post { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .accent-badge {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .text-muted { color: #777; }
+    .text-secondary { color: #aaa; }
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      color: #000;
+      font-weight: 600;
+      font-size: 13px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .cta-button::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 60%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      animation: shine 3s infinite;
+    }
+    @keyframes shine {
+      0% { left: -100%; }
+      50%, 100% { left: 150%; }
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255,255,255,0.15);
+    }
+    .cta-button svg {
+      width: 14px;
+      height: 14px;
+    }
+  </style>
+  <script>
+    // Load background image
+    window.addEventListener('load', function() {
+      const img = new Image();
+      img.onload = function() { document.body.classList.add('bg-loaded'); };
+      img.src = 'https://vibekit.bot/public/bg.webp';
+    });
+  </script>
+</head>
+<body class="font-sans antialiased min-h-screen">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 header-glass z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="https://vibekit.bot" class="flex items-center gap-3">
+        <img src="https://vibekit.bot/public/Group2.png" alt="VibeKit" class="w-8 h-8">
+        <span class="font-marker text-xl text-white">VibeKit</span>
+      </a>
+      <div class="flex items-center gap-6">
+        <a href="https://github.com/609NFT/vibekit" class="text-sm text-muted hover:text-white transition">GitHub</a>
+        <a href="#quickstart" class="cta-button">
+          Get API Key
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <nav class="w-64 fixed left-0 top-16 bottom-0 sidebar-glass p-6 overflow-y-auto hidden lg:block">
+      <div class="space-y-8">
+        <div>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Getting Started</h3>
+          <ul class="space-y-1">
+            <li><a href="#intro" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Introduction</a></li>
+            <li><a href="#quickstart" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Quickstart</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">API Reference</h3>
+          <ul class="space-y-1">
+            <li><a href="#auth" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Authentication</a></li>
+            <li><a href="#tasks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Tasks</a></li>
+            <li><a href="#skills" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Skills</a></li>
+            <li><a href="#webhooks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Webhooks</a></li>
+            <li><a href="#domains" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Custom Domains</a></li>
+            <li><a href="#limits" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Rate Limits</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Tools</h3>
+          <ul class="space-y-1">
+            <li><a href="#cli" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">CLI</a></li>
+            <li><a href="#mcp" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">MCP Server</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 lg:ml-64 min-h-screen">
+      <div class="max-w-3xl mx-auto px-6 py-12">
+        
+        <!-- Hero -->
+        <section id="intro" class="mb-16">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium mb-4" style="background: rgba(255, 255, 255, 0.08); color: #fff;">
+            <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+            API v1
+          </div>
+          <h1 class="text-4xl font-bold mb-4 text-white">VibeKit Documentation</h1>
+          <p class="text-xl text-secondary leading-relaxed">Build and deploy full-stack apps with AI. One API call, live URL in minutes.</p>
+        </section>
+
+        <!-- Quickstart -->
+        <section id="quickstart" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-white">
+            <span class="w-8 h-8 rounded-lg flex items-center justify-center text-sm accent-badge">1</span>
+            Quickstart
+          </h2>
+          
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Get an API Key</h3>
+              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/auth/register \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{"email": "you@example.com"}'</span></code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Submit a Task</h3>
+              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/task \
+  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -H <span class="code-string">"Content-Type: application/json"</span> \
+  -d <span class="code-string">'{"prompt": "Build a todo app with dark mode"}'</span></code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Check Status & Get URL</h3>
+              <pre class="p-4 font-mono text-sm"><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
+  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span></code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Authentication -->
+        <section id="auth" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Authentication</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">All API requests require a Bearer token in the Authorization header:</p>
+            <pre class="p-4 font-mono text-sm mb-6"><code>Authorization: Bearer vk_your_api_key</code></pre>
+            
+            <h3 class="font-semibold mb-3 text-white">Register</h3>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+              <code class="text-sm font-mono text-muted">/api/v1/auth/register</code>
+            </div>
+            <pre class="p-4 font-mono text-sm"><code>{<span class="code-string">"email"</span>: <span class="code-string">"you@example.com"</span>}</code></pre>
+            <p class="text-sm mt-3 text-muted">Returns your API key + $0.25 free credits.</p>
+          </div>
+        </section>
+
+        <!-- Tasks -->
+        <section id="tasks" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Tasks</h2>
+          
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Submit Task</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/task</code>
+              </div>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"prompt"</span>: <span class="code-string">"Build a landing page"</span>,
+  <span class="code-string">"skills"</span>: [<span class="code-string">"solana"</span>],        <span class="code-comment">// optional</span>
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>,      <span class="code-comment">// optional: iterate</span>
+  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://..."</span> <span class="code-comment">// optional: webhook</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Get Task Status</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/task/:taskId</code>
+              </div>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,  <span class="code-comment">// pending | running | complete | error</span>
+  <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://..."</span>,
+  <span class="code-string">"repoUrl"</span>: <span class="code-string">"https://github.com/..."</span>,
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Skills -->
+        <section id="skills" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Skills</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Skills inject domain-specific knowledge into code generation. Community-contributed via <a href="https://github.com/vibekit-apps/skills-registry" class="text-white hover:underline">skills-registry</a>.</p>
+            <div class="flex items-center gap-2 mb-4">
+              <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+              <code class="text-sm font-mono text-muted">/api/v1/skills</code>
+            </div>
+            <div class="rounded-lg p-4 mb-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
+              <div class="flex items-center gap-3">
+                <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">solana</span>
+                <span class="text-sm text-secondary">Wallet connection, dApp development, Anchor programs</span>
+                <span class="px-1.5 py-0.5 text-xs rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">✓ verified</span>
+              </div>
+            </div>
+            <p class="text-sm text-muted">Want to add a skill? <a href="https://github.com/vibekit-apps/skills-registry#contributing-a-skill" class="text-white hover:underline">Submit a PR</a> to the registry.</p>
+          </div>
+        </section>
+
+        <!-- Webhooks -->
+        <section id="webhooks" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Webhooks</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Get notified when tasks complete. Include <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">callbackUrl</code> in your task submission.</p>
+            <pre class="p-4 font-mono text-sm mb-4"><code>{
+  <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,
+  <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://..."</span>,
+  <span class="code-string">"repoUrl"</span>: <span class="code-string">"https://github.com/..."</span>
+}</code></pre>
+            <div class="rounded-lg p-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3)">
+              <p class="text-sm" style="color: #fbbf24;"><strong>Signature Verification:</strong> Webhooks include <code class="px-1 rounded" style="background: rgba(251, 191, 36, 0.2)">X-VibeKit-Signature</code> header. Verify with HMAC-SHA256 using your API key.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Custom Domains -->
+        <section id="domains" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Custom Domains</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Connect your own domain to any deployed project.</p>
+            <pre class="rounded-lg p-4 font-mono text-sm mb-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);"><code><span class="code-comment"># Add a custom domain</span>
+curl -X POST https://vibekit.bot/api/v1/project/my-app/domain \
+  -H "Authorization: Bearer vk_xxx" \
+  -H "Content-Type: application/json" \
+  -d '{"domain": "mysite.com"}'</code></pre>
+            <p class="mb-3 text-secondary">Response includes DNS records to configure:</p>
+            <pre class="rounded-lg p-4 font-mono text-sm mb-4" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);"><code>{
+  <span class="code-string">"domain"</span>: <span class="code-string">"mysite.com"</span>,
+  <span class="code-string">"dnsRecords"</span>: [
+    {<span class="code-string">"type"</span>: <span class="code-string">"A"</span>, <span class="code-string">"name"</span>: <span class="code-string">"@"</span>, <span class="code-string">"value"</span>: <span class="code-string">"76.76.21.21"</span>},
+    {<span class="code-string">"type"</span>: <span class="code-string">"CNAME"</span>, <span class="code-string">"name"</span>: <span class="code-string">"www"</span>, <span class="code-string">"value"</span>: <span class="code-string">"cname.vercel-dns.com"</span>}
+  ]
+}</code></pre>
+            <p class="text-secondary text-sm">Configure these records at your registrar (GoDaddy, Namecheap, Cloudflare, etc.). Vercel auto-verifies and issues SSL.</p>
+          </div>
+        </section>
+
+        <!-- Rate Limits -->
+        <section id="limits" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Rate Limits</h2>
+          <div class="section-card rounded-xl overflow-hidden">
+            <table class="w-full">
+              <thead style="background: rgba(255,255,255,0.03)">
+                <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Plan</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Requests/min</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Free</td><td class="px-6 py-4 text-secondary">10</td><td class="px-6 py-4 text-secondary">$0</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Pro</td><td class="px-6 py-4 text-secondary">30</td><td class="px-6 py-4 text-secondary">$9.99/mo</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-4 text-white">Team</td><td class="px-6 py-4 text-secondary">60</td><td class="px-6 py-4 text-secondary">$29.99/mo</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- CLI -->
+        <section id="cli" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">CLI</h2>
+          <div class="section-card rounded-xl p-6">
+            <pre class="p-4 font-mono text-sm"><code><span class="code-comment"># Install</span>
+npm install -g vibekit-cli
+
+<span class="code-comment"># Login</span>
+vibekit login
+
+<span class="code-comment"># Build something</span>
+vibekit build <span class="code-string">"Create a blog with markdown"</span>
+
+<span class="code-comment"># Check status</span>
+vibekit status task_abc123</code></pre>
+          </div>
+        </section>
+
+        <!-- MCP -->
+        <section id="mcp" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">MCP Server</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">Use VibeKit as an MCP tool with Claude Desktop.</p>
+            <pre class="p-4 font-mono text-sm mb-4"><code>npm install -g vibekit-mcp</code></pre>
+            <p class="text-sm mb-3 text-muted">Add to Claude Desktop config:</p>
+            <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"mcpServers"</span>: {
+    <span class="code-string">"vibekit"</span>: {
+      <span class="code-string">"command"</span>: <span class="code-string">"vibekit-mcp"</span>,
+      <span class="code-string">"env"</span>: {<span class="code-string">"VIBEKIT_API_KEY"</span>: <span class="code-string">"vk_..."</span>}
+    }
+  }
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-8 mt-16" style="border-top: 1px solid #222">
+          <div class="flex items-center justify-between text-sm text-muted">
+            <p>© 2026 VibeKit</p>
+            <div class="flex items-center gap-4">
+              <a href="https://discord.gg/clawd" class="hover:text-white transition">Discord</a>
+              <a href="https://github.com/609NFT/vibekit" class="hover:text-white transition">GitHub</a>
+              <a href="mailto:support@vibekit.bot" class="hover:text-white transition">Support</a>
+            </div>
+          </div>
+        </footer>
+
+      </div>
+    </main>
+  </div>
+</body>
+</html>
