@@ -185,6 +185,7 @@
           <ul class="space-y-1">
             <li><a href="#cli" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">CLI</a></li>
             <li><a href="#mcp" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">MCP Server</a></li>
+            <li><a href="#workflows" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Advanced Workflows</a></li>
           </ul>
         </div>
       </div>
@@ -379,6 +380,23 @@ vibekit status task_abc123</code></pre>
     }
   }
 }</code></pre>
+          </div>
+        </section>
+
+        <!-- Advanced Workflows -->
+        <section id="workflows" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Advanced Workflows</h2>
+          <div class="section-card rounded-xl p-6">
+            <p class="mb-4 text-secondary">For complex features, combine VibeKit with <a href="https://github.com/snarktank/antfarm" class="text-sky-400 hover:underline">Antfarm</a> multi-agent workflows.</p>
+            <p class="text-sm mb-4 text-muted">Antfarm provides plan → implement → verify → test → review cycles with specialized AI agents. VibeKit handles deployment.</p>
+            <pre class="p-4 font-mono text-sm mb-4"><code><span class="code-comment"># Antfarm develops the feature</span>
+antfarm workflow run feature-dev <span class="code-string">"Add Stripe checkout"</span>
+
+<span class="code-comment"># VibeKit deploys when ready</span>
+curl -X POST https://vibekit.bot/api/v1/task \
+  -H <span class="code-string">"Authorization: Bearer $KEY"</span> \
+  -d <span class="code-string">'{"prompt": "Deploy latest", "repo": "user/app"}'</span></code></pre>
+            <p class="text-sm text-muted">Use VibeKit for quick iterations, Antfarm for features needing verification gates.</p>
           </div>
         </section>
 
