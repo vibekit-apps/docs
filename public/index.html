@@ -64,8 +64,10 @@
     .code-keyword { color: #c084fc; }
     .code-string { color: #4ade80; }
     .code-comment { color: #64748b; }
+    .code-number { color: #fb923c; }
     .nav-link { transition: all 0.15s; color: #888; }
     .nav-link:hover { transform: translateX(4px); color: #fff; }
+    .nav-link.active { color: #fff; background: rgba(255,255,255,0.05); }
     .section-card { 
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid #222;
@@ -88,6 +90,7 @@
     }
     .badge-get { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
     .badge-post { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
+    .badge-put { background: rgba(251, 191, 36, 0.15); color: #fbbf24; }
     .badge-delete { background: rgba(239, 68, 68, 0.15); color: #f87171; }
     .accent-badge {
       background: rgba(255, 255, 255, 0.1);
@@ -132,9 +135,18 @@
       width: 14px;
       height: 14px;
     }
+    .endpoint-group { border-left: 2px solid #333; padding-left: 1rem; margin-left: 0.25rem; }
+    .param-table { width: 100%; font-size: 0.875rem; }
+    .param-table th { text-align: left; padding: 0.5rem 0.75rem; color: #777; font-weight: 600; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+    .param-table td { padding: 0.5rem 0.75rem; border-top: 1px solid #222; }
+    .param-table td:first-child { font-family: 'JetBrains Mono', monospace; color: #e2e8f0; }
+    .param-table td:nth-child(2) { color: #64748b; font-size: 0.8rem; }
+    .param-table td:last-child { color: #aaa; }
+    .sidebar-glass::-webkit-scrollbar { width: 4px; }
+    .sidebar-glass::-webkit-scrollbar-track { background: transparent; }
+    .sidebar-glass::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
   </style>
   <script>
-    // Load background image
     window.addEventListener('load', function() {
       const img = new Image();
       img.onload = function() { document.body.classList.add('bg-loaded'); };
@@ -176,10 +188,20 @@
           <ul class="space-y-1">
             <li><a href="#auth" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Authentication</a></li>
             <li><a href="#tasks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Tasks</a></li>
-            <li><a href="#hosting" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Hosting API</a></li>
+            <li><a href="#hosting" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Hosting</a></li>
             <li><a href="#agent" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">AI Agent</a></li>
+            <li><a href="#account" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Account &amp; Billing</a></li>
+            <li><a href="#repos" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Repos</a></li>
             <li><a href="#skills" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Skills</a></li>
             <li><a href="#webhooks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Webhooks</a></li>
+            <li><a href="#events" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Activity Feed</a></li>
+            <li><a href="#feedback" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Feedback</a></li>
+            <li><a href="#errors" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Errors</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Plans</h3>
+          <ul class="space-y-1">
             <li><a href="#limits" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Rate Limits</a></li>
             <li><a href="#pricing" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Pricing</a></li>
           </ul>
@@ -206,7 +228,10 @@
             API v1
           </div>
           <h1 class="text-4xl font-bold mb-4 text-white">VibeKit Documentation</h1>
-          <p class="text-xl text-secondary leading-relaxed">Build and deploy full-stack apps with AI. One API call, live URL in minutes. Apps are hosted as Docker containers at <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">{name}.vibekit.bot</code>.</p>
+          <p class="text-xl text-secondary leading-relaxed mb-6">Build and deploy full-stack apps with AI. One API call, live URL in minutes. Apps are hosted as Docker containers at <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">{name}.vibekit.bot</code>.</p>
+          <div class="section-card rounded-xl p-5">
+            <p class="text-sm text-secondary"><strong class="text-white">Base URL:</strong> <code class="px-1.5 py-0.5 rounded text-sm font-mono" style="background: rgba(255,255,255,0.1)">https://vibekit.bot/api/v1</code></p>
+          </div>
         </section>
 
         <!-- Quickstart -->
@@ -236,7 +261,7 @@
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Check Status & Get URL</h3>
+              <h3 class="font-semibold mb-3 text-white">Check Status &amp; Get URL</h3>
               <pre class="p-4 font-mono text-sm"><code>curl https://vibekit.bot/api/v1/task/TASK_ID \
   -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span></code></pre>
               <p class="text-sm mt-3 text-muted">Your app will be live at <code class="px-1 rounded" style="background: rgba(255,255,255,0.1)">{name}.vibekit.bot</code></p>
@@ -247,29 +272,71 @@
         <!-- Authentication -->
         <section id="auth" class="mb-16">
           <h2 class="text-2xl font-bold mb-6 text-white">Authentication</h2>
-          <div class="section-card rounded-xl p-6">
-            <p class="mb-4 text-secondary">VibeKit supports two authentication methods:</p>
+          <div class="section-card rounded-xl p-6 mb-6">
+            <p class="mb-5 text-secondary">VibeKit supports two authentication methods. All API requests require one of these in the <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">Authorization</code> header.</p>
 
-            <h3 class="font-semibold mb-3 text-white">1. GitHub Sign-In (Web)</h3>
-            <p class="mb-4 text-secondary">Sign in with your GitHub account at <a href="https://vibekit.bot/auth/github" class="text-white hover:underline">/auth/github</a>. This gives you access to the <a href="https://app.vibekit.bot" class="text-white hover:underline">Dashboard</a> and your API key.</p>
-
-            <h3 class="font-semibold mb-3 text-white">2. API Key (Bearer Token)</h3>
-            <p class="mb-4 text-secondary">All API requests require a Bearer token in the Authorization header:</p>
+            <h3 class="font-semibold mb-2 text-white">1. API Key</h3>
+            <p class="mb-3 text-secondary">Use your API key directly. Keys start with <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">vk_</code>.</p>
             <pre class="p-4 font-mono text-sm mb-6"><code>Authorization: Bearer vk_your_api_key</code></pre>
             
-            <h3 class="font-semibold mb-3 text-white">Register via API</h3>
-            <div class="flex items-center gap-2 mb-3">
-              <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
-              <code class="text-sm font-mono text-muted">/api/v1/auth/register</code>
+            <h3 class="font-semibold mb-2 text-white">2. JWT (Dashboard Sessions)</h3>
+            <p class="mb-3 text-secondary">JWTs are issued via GitHub OAuth sign-in or the <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">POST /auth/token</code> endpoint. Used by the web dashboard.</p>
+            <pre class="p-4 font-mono text-sm"><code>Authorization: Bearer eyJhbGciOiJIUzI1NiIs...</code></pre>
+          </div>
+
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Register via API</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/auth/register</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Create an account and receive an API key. No authentication required.</p>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Request Body</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"email"</span>: <span class="code-string">"you@example.com"</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"apiKey"</span>: <span class="code-string">"vk_xxx..."</span>,
+  <span class="code-string">"plan"</span>: <span class="code-string">"free"</span>,
+  <span class="code-string">"balance"</span>: <span class="code-number">0.25</span>
+}</code></pre>
             </div>
-            <pre class="p-4 font-mono text-sm"><code>{<span class="code-string">"email"</span>: <span class="code-string">"you@example.com"</span>}</code></pre>
-            <p class="text-sm mt-3 text-muted">Returns your API key. Free plan includes 3 sessions/month.</p>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Exchange API Key for JWT</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/auth/token</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Exchange an API key for a short-lived JWT. Useful for frontend apps that need token-based auth.</p>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Request Body</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"apiKey"</span>: <span class="code-string">"vk_xxx"</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"token"</span>: <span class="code-string">"eyJhbGciOiJIUzI1NiIs..."</span>,
+  <span class="code-string">"expiresIn"</span>: <span class="code-number">86400</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">GitHub OAuth</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/auth/github</code>
+              </div>
+              <p class="text-sm text-secondary">Redirects to GitHub OAuth for sign-in. On success, issues a JWT and redirects to the <a href="https://app.vibekit.bot" class="text-white hover:underline">Dashboard</a>.</p>
+            </div>
           </div>
         </section>
 
         <!-- Tasks -->
         <section id="tasks" class="mb-16">
           <h2 class="text-2xl font-bold mb-6 text-white">Tasks</h2>
+          <p class="mb-6 text-secondary">Submit coding tasks to VibeKit's AI. Each task consumes one session from your plan (unless using BYOK mode).</p>
           
           <div class="space-y-6">
             <div class="section-card rounded-xl p-6">
@@ -278,13 +345,33 @@
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
                 <code class="text-sm font-mono text-muted">/api/v1/task</code>
               </div>
-              <pre class="p-4 font-mono text-sm"><code>{
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Request Body</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
   <span class="code-string">"prompt"</span>: <span class="code-string">"Build a landing page"</span>,
-  <span class="code-string">"skills"</span>: [<span class="code-string">"solana"</span>],        <span class="code-comment">// optional</span>
-  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>,      <span class="code-comment">// optional: iterate</span>
-  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://..."</span> <span class="code-comment">// optional: webhook</span>
+  <span class="code-string">"skills"</span>: [<span class="code-string">"solana"</span>],        <span class="code-comment">// optional: domain skills</span>
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>,      <span class="code-comment">// optional: iterate on existing</span>
+  <span class="code-string">"repo"</span>: <span class="code-string">"owner/repo"</span>,       <span class="code-comment">// optional: target repo</span>
+  <span class="code-string">"database"</span>: <span class="code-keyword">true</span>,          <span class="code-comment">// optional: include SQLite</span>
+  <span class="code-string">"template"</span>: <span class="code-string">"landing"</span>,      <span class="code-comment">// optional: project template</span>
+  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://..."</span>, <span class="code-comment">// optional: webhook</span>
+  <span class="code-string">"anthropicApiKey"</span>: <span class="code-string">"sk-ant-..."</span> <span class="code-comment">// optional: BYOK (free)</span>
 }</code></pre>
-              <p class="text-sm mt-3 text-muted">Each task consumes one session.</p>
+              <table class="param-table">
+                <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td>prompt</td><td>string · required</td><td>What you want built, in plain English</td></tr>
+                  <tr><td>projectId</td><td>string</td><td>Existing project ID to iterate on</td></tr>
+                  <tr><td>repo</td><td>string</td><td>GitHub repo (owner/name). Omit to create new</td></tr>
+                  <tr><td>branch</td><td>string</td><td>Branch to work on. Default: <code>main</code></td></tr>
+                  <tr><td>deploy</td><td>boolean</td><td>Auto-host when done. Default: <code>true</code></td></tr>
+                  <tr><td>database</td><td>boolean</td><td>Include SQLite database. Default: <code>false</code></td></tr>
+                  <tr><td>template</td><td>string</td><td>Project template (landing, dashboard, crud-api, saas, blog, form, portfolio, ecommerce)</td></tr>
+                  <tr><td>skills</td><td>string[]</td><td>Domain skills (e.g. <code>["solana", "stripe"]</code>)</td></tr>
+                  <tr><td>files</td><td>object[]</td><td>File attachments (<code>{name, content}</code> base64)</td></tr>
+                  <tr><td>callbackUrl</td><td>string</td><td>Webhook URL for completion notification</td></tr>
+                  <tr><td>anthropicApiKey</td><td>string</td><td>Your Anthropic key for BYOK mode (free)</td></tr>
+                </tbody>
+              </table>
             </div>
 
             <div class="section-card rounded-xl p-6">
@@ -293,33 +380,62 @@
                 <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
                 <code class="text-sm font-mono text-muted">/api/v1/task/:taskId</code>
               </div>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
               <pre class="p-4 font-mono text-sm"><code>{
   <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
   <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,  <span class="code-comment">// pending | running | complete | error</span>
   <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://myapp.vibekit.bot"</span>,
-  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>
+  <span class="code-string">"projectId"</span>: <span class="code-string">"abc123"</span>,
+  <span class="code-string">"repo"</span>: <span class="code-string">"vibekit-apps/project-abc123"</span>
 }</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">List Tasks</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/tasks</code>
+              </div>
+              <p class="text-sm text-secondary">Returns your recent tasks with status and deploy URLs.</p>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Cancel Task</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-delete px-2 py-1 text-xs font-mono rounded">DELETE</span>
+                <code class="text-sm font-mono text-muted">/api/v1/task/:taskId</code>
+              </div>
+              <p class="text-sm text-secondary">Cancel a running or starting task. Only tasks with status <code class="px-1 rounded" style="background: rgba(255,255,255,0.1)">running</code> or <code class="px-1 rounded" style="background: rgba(255,255,255,0.1)">starting</code> can be cancelled.</p>
             </div>
           </div>
         </section>
 
         <!-- Hosting API -->
         <section id="hosting" class="mb-16">
-          <h2 class="text-2xl font-bold mb-6 text-white">Hosting API</h2>
-          <p class="mb-6 text-secondary">Apps are deployed as Docker containers and served at <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">{name}.vibekit.bot</code>. Manage deployments programmatically.</p>
+          <h2 class="text-2xl font-bold mb-6 text-white">Hosting</h2>
+          <p class="mb-6 text-secondary">Deploy and manage apps as Docker containers at <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">{name}.vibekit.bot</code>. Full lifecycle management with health monitoring and auto-recovery.</p>
           
           <div class="space-y-6">
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Deploy</h3>
+              <h3 class="font-semibold mb-3 text-white">Deploy App</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
                 <code class="text-sm font-mono text-muted">/api/v1/hosting/deploy</code>
               </div>
-              <p class="text-sm text-muted mb-3">Deploy a new app or redeploy an existing one.</p>
-              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/hosting/deploy \
-  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
-  -H <span class="code-string">"Content-Type: application/json"</span> \
-  -d <span class="code-string">'{"name": "my-app", "repo": "user/repo"}'</span></code></pre>
+              <p class="text-sm text-secondary mb-3">Deploy a new app from a GitHub repository.</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"repo"</span>: <span class="code-string">"owner/repo"</span>,
+  <span class="code-string">"subdomain"</span>: <span class="code-string">"my-app"</span>,      <span class="code-comment">// optional</span>
+  <span class="code-string">"runtime"</span>: <span class="code-string">"node"</span>,          <span class="code-comment">// optional (default: node)</span>
+  <span class="code-string">"memoryLimit"</span>: <span class="code-number">256</span>,         <span class="code-comment">// optional: MB</span>
+  <span class="code-string">"envVars"</span>: {<span class="code-string">"KEY"</span>: <span class="code-string">"value"</span>} <span class="code-comment">// optional</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"id"</span>: <span class="code-string">"app_abc123"</span>,
+  <span class="code-string">"url"</span>: <span class="code-string">"https://my-app.vibekit.bot"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"running"</span>
+}</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
@@ -328,54 +444,135 @@
                 <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
                 <code class="text-sm font-mono text-muted">/api/v1/hosting/apps</code>
               </div>
-              <p class="text-sm text-muted">Returns all apps for the authenticated user.</p>
+              <p class="text-sm text-secondary mb-3">Returns all hosted apps for the authenticated user.</p>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"apps"</span>: [{
+    <span class="code-string">"id"</span>: <span class="code-string">"app_abc123"</span>,
+    <span class="code-string">"name"</span>: <span class="code-string">"my-app"</span>,
+    <span class="code-string">"repo"</span>: <span class="code-string">"owner/repo"</span>,
+    <span class="code-string">"url"</span>: <span class="code-string">"https://my-app.vibekit.bot"</span>,
+    <span class="code-string">"status"</span>: <span class="code-string">"running"</span>,
+    <span class="code-string">"memory"</span>: <span class="code-number">256</span>
+  }]
+}</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">App Detail</h3>
+              <h3 class="font-semibold mb-3 text-white">App Details</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
                 <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id</code>
               </div>
-              <p class="text-sm text-muted mb-3">Returns app details including infrastructure topology (container status, resource usage, domain config).</p>
+              <p class="text-sm text-secondary mb-3">Returns full app details including infrastructure topology, resource usage, and domain config.</p>
               <pre class="p-4 font-mono text-sm"><code>{
   <span class="code-string">"id"</span>: <span class="code-string">"app_abc123"</span>,
   <span class="code-string">"name"</span>: <span class="code-string">"my-app"</span>,
   <span class="code-string">"url"</span>: <span class="code-string">"https://my-app.vibekit.bot"</span>,
   <span class="code-string">"status"</span>: <span class="code-string">"running"</span>,
-  <span class="code-string">"infra"</span>: { <span class="code-comment">/* topology details */</span> }
+  <span class="code-string">"stats"</span>: { <span class="code-string">"cpu"</span>: <span class="code-number">2.1</span>, <span class="code-string">"memory"</span>: <span class="code-number">128</span>, <span class="code-string">"memoryLimit"</span>: <span class="code-number">256</span> },
+  <span class="code-string">"infra"</span>: {
+    <span class="code-string">"nodes"</span>: [{ <span class="code-string">"id"</span>, <span class="code-string">"type"</span>, <span class="code-string">"label"</span> }],
+    <span class="code-string">"edges"</span>: [{ <span class="code-string">"source"</span>, <span class="code-string">"target"</span>, <span class="code-string">"label"</span> }]
+  }
 }</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">App Actions</h3>
+              <h3 class="font-semibold mb-3 text-white">App Lifecycle</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
                 <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/:action</code>
               </div>
-              <p class="text-sm text-muted mb-3">Available actions:</p>
-              <div class="flex flex-wrap gap-2 mb-3">
-                <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">restart</span>
-                <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">stop</span>
+              <p class="text-sm text-secondary mb-3">Control your app's lifecycle. Available actions:</p>
+              <div class="flex flex-wrap gap-2 mb-4">
                 <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">start</span>
+                <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">stop</span>
+                <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">restart</span>
                 <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">redeploy</span>
-                <span class="px-2 py-1 text-xs font-mono rounded" style="background: rgba(255,255,255,0.08);">delete</span>
               </div>
               <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/hosting/app/APP_ID/restart \
   -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span></code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Resize App</h3>
+              <h3 class="font-semibold mb-3 text-white">Delete App</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-delete px-2 py-1 text-xs font-mono rounded">DELETE</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id</code>
+              </div>
+              <p class="text-sm text-secondary">Permanently delete an app and its container. This action cannot be undone.</p>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Resize Container</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
                 <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/resize</code>
               </div>
-              <p class="text-sm text-muted mb-3">Scale container resources for an app.</p>
-              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/hosting/app/APP_ID/resize \
-  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
-  -H <span class="code-string">"Content-Type: application/json"</span> \
-  -d <span class="code-string">'{"cpu": 2, "memory": "1G"}'</span></code></pre>
+              <p class="text-sm text-secondary mb-3">Change the container's memory allocation. See <a href="#pricing" class="text-white hover:underline">Container Memory Add-ons</a> for pricing.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"memoryLimit"</span>: <span class="code-number">512</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Set Custom Domain</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/domain</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Attach a custom domain to your app. Returns DNS records to configure at your registrar.</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"domain"</span>: <span class="code-string">"mysite.com"</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"domain"</span>: <span class="code-string">"mysite.com"</span>,
+  <span class="code-string">"dnsRecords"</span>: [
+    { <span class="code-string">"type"</span>: <span class="code-string">"A"</span>, <span class="code-string">"name"</span>: <span class="code-string">"@"</span>, <span class="code-string">"value"</span>: <span class="code-string">"76.76.21.21"</span> }
+  ]
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Container Logs</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/logs</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Retrieve container stdout/stderr logs.</p>
+              <table class="param-table">
+                <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td>lines</td><td>number</td><td>Number of log lines to return (default: 100)</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Deploy Progress</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/deploy-progress</code>
+              </div>
+              <p class="text-sm text-secondary">Check the current deployment status and build progress for an app.</p>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Execute Command</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/exec</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Execute a shell command inside the app's container.</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"command"</span>: <span class="code-string">"ls -la /app"</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"output"</span>: <span class="code-string">"total 48\ndrwxr-xr-x 6 node node ..."</span>
+}</code></pre>
             </div>
           </div>
         </section>
@@ -383,51 +580,207 @@
         <!-- AI Agent -->
         <section id="agent" class="mb-16">
           <h2 class="text-2xl font-bold mb-6 text-white">AI Agent</h2>
-          <p class="mb-6 text-secondary">The AI Agent handles complex multi-step tasks — building, debugging, and deploying autonomously.</p>
+          <p class="mb-6 text-secondary">Each hosted app has a built-in AI agent that can modify code, debug issues, and manage the app autonomously. Send messages to the agent and monitor its work.</p>
           
           <div class="space-y-6">
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Start Agent Task</h3>
+              <h3 class="font-semibold mb-3 text-white">Send Message to Agent</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
-                <code class="text-sm font-mono text-muted">/agent</code>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent</code>
               </div>
-              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/agent \
-  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
-  -H <span class="code-string">"Content-Type: application/json"</span> \
-  -d <span class="code-string">'{"prompt": "Build and deploy a blog with auth"}'</span></code></pre>
+              <p class="text-sm text-secondary mb-3">Send a message to the app's AI agent. Supports sync and async modes.</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code><span class="code-comment">// Sync — waits for response</span>
+{
+  <span class="code-string">"message"</span>: <span class="code-string">"Add a health check endpoint at /api/health"</span>
+}
+
+<span class="code-comment">// Async — returns 202, POSTs result to callbackUrl</span>
+{
+  <span class="code-string">"message"</span>: <span class="code-string">"Refactor the auth module"</span>,
+  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://your-server.com/webhook"</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response (sync)</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"response"</span>: <span class="code-string">"Added health check endpoint at /api/health..."</span>,
+  <span class="code-string">"engine"</span>: <span class="code-string">"openclaw"</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Chat History</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/history</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Retrieve the agent's conversation history.</p>
+              <table class="param-table">
+                <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td>limit</td><td>number</td><td>Max messages to return (default: 50)</td></tr>
+                </tbody>
+              </table>
+              <p class="text-xs text-muted mt-3 mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"messages"</span>: [
+    { <span class="code-string">"role"</span>: <span class="code-string">"user"</span>, <span class="code-string">"content"</span>: <span class="code-string">"..."</span>, <span class="code-string">"timestamp"</span>: <span class="code-string">"..."</span> },
+    { <span class="code-string">"role"</span>: <span class="code-string">"assistant"</span>, <span class="code-string">"content"</span>: <span class="code-string">"..."</span>, <span class="code-string">"timestamp"</span>: <span class="code-string">"..."</span> }
+  ]
+}</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
               <h3 class="font-semibold mb-3 text-white">Agent Activity</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
-                <code class="text-sm font-mono text-muted">/agent/activity</code>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/activity</code>
               </div>
-              <p class="text-sm text-muted">Returns currently active agent tasks and their live status.</p>
+              <p class="text-sm text-secondary mb-3">Check if the agent is currently working on something.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"status"</span>: <span class="code-string">"idle"</span>,  <span class="code-comment">// idle | working</span>
+  <span class="code-string">"lastActivity"</span>: <span class="code-string">"2026-02-12T20:30:00Z"</span>
+}</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Agent History</h3>
+              <h3 class="font-semibold mb-3 text-white">Workspace Changes</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
-                <code class="text-sm font-mono text-muted">/agent/history</code>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/changes</code>
               </div>
-              <p class="text-sm text-muted">Returns completed agent task history.</p>
+              <p class="text-sm text-secondary mb-3">View the git diff of changes the agent has made in the workspace.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"files"</span>: [{ <span class="code-string">"path"</span>: <span class="code-string">"src/index.ts"</span>, <span class="code-string">"status"</span>: <span class="code-string">"M"</span> }],
+  <span class="code-string">"diff"</span>: <span class="code-string">"--- a/src/index.ts\n+++ b/src/index.ts\n..."</span>,
+  <span class="code-string">"summary"</span>: <span class="code-string">"1 modified"</span>
+}</code></pre>
             </div>
 
             <div class="section-card rounded-xl p-6">
-              <h3 class="font-semibold mb-3 text-white">Agent Control</h3>
+              <h3 class="font-semibold mb-3 text-white">Token Usage</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/context</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Check the agent's context window usage.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"used"</span>: <span class="code-number">45000</span>,
+  <span class="code-string">"limit"</span>: <span class="code-number">200000</span>,
+  <span class="code-string">"percent"</span>: <span class="code-number">23</span>,
+  <span class="code-string">"compactions"</span>: <span class="code-number">1</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Build Preview</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/preview</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Serve the agent's build output. Useful for iframe embedding and previewing changes before deploying.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"available"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"buildDir"</span>: <span class="code-string">"build"</span>,
+  <span class="code-string">"files"</span>: [<span class="code-string">"index.html"</span>, <span class="code-string">"static/js/main.js"</span>]
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Reset Agent Session</h3>
               <div class="flex items-center gap-2 mb-3">
                 <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
-                <code class="text-sm font-mono text-muted">/agent/control</code>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/reset</code>
               </div>
-              <p class="text-sm text-muted mb-3">Send control commands to a running agent (pause, resume, cancel).</p>
-              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/agent/control \
-  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
-  -H <span class="code-string">"Content-Type: application/json"</span> \
-  -d <span class="code-string">'{"taskId": "task_abc", "action": "cancel"}'</span></code></pre>
+              <p class="text-sm text-secondary">Clear the agent's conversation history and context. Useful when the agent's context window is full or you want a fresh start.</p>
             </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Change Agent Model</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-put px-2 py-1 text-xs font-mono rounded">PUT</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/model</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Switch the AI model the agent uses.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"model"</span>: <span class="code-string">"claude-sonnet-4-20250514"</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Upload File to Agent</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/hosting/app/:id/agent/upload</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Upload a file to the agent's workspace. Use multipart form data.</p>
+              <pre class="p-4 font-mono text-sm"><code>curl -X POST https://vibekit.bot/api/v1/hosting/app/APP_ID/agent/upload \
+  -H <span class="code-string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  -F <span class="code-string">"file=@./design.png"</span></code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Account & Billing -->
+        <section id="account" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Account &amp; Billing</h2>
+          
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Account Info</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/account</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Returns your plan, balance, usage limits, and Claude key status.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"plan"</span>: <span class="code-string">"builder"</span>,
+  <span class="code-string">"sessionsUsed"</span>: <span class="code-number">12</span>,
+  <span class="code-string">"sessionsLimit"</span>: <span class="code-number">50</span>,
+  <span class="code-string">"balance"</span>: <span class="code-number">3.50</span>,
+  <span class="code-string">"hostedApps"</span>: <span class="code-number">2</span>,
+  <span class="code-string">"maxApps"</span>: <span class="code-number">3</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Available Plans</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/plans</code>
+              </div>
+              <p class="text-sm text-secondary">List all available plans and session packs with pricing.</p>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Start Checkout</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/checkout</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Get a Stripe checkout URL to upgrade your plan or buy session packs.</p>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"product"</span>: <span class="code-string">"pro"</span>  <span class="code-comment">// builder | pro | sessions_10 | sessions_30 | sessions_100</span>
+}</code></pre>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"url"</span>: <span class="code-string">"https://checkout.stripe.com/..."</span>,
+  <span class="code-string">"sessionId"</span>: <span class="code-string">"cs_xxx"</span>
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Repos -->
+        <section id="repos" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Repos</h2>
+          
+          <div class="section-card rounded-xl p-6">
+            <h3 class="font-semibold mb-3 text-white">List GitHub Repos</h3>
+            <div class="flex items-center gap-2 mb-3">
+              <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+              <code class="text-sm font-mono text-muted">/api/v1/repos</code>
+            </div>
+            <p class="text-sm text-secondary">Returns the GitHub repositories accessible to your account. Requires GitHub OAuth connection.</p>
           </div>
         </section>
 
@@ -440,11 +793,27 @@
               <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
               <code class="text-sm font-mono text-muted">/api/v1/skills</code>
             </div>
-            <div class="rounded-lg p-4 mb-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
-              <div class="flex items-center gap-3">
-                <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">solana</span>
-                <span class="text-sm text-secondary">Wallet connection, dApp development, Anchor programs</span>
-                <span class="px-1.5 py-0.5 text-xs rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">✓ verified</span>
+            <div class="space-y-2 mb-4">
+              <div class="rounded-lg p-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
+                <div class="flex items-center gap-3">
+                  <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">solana</span>
+                  <span class="text-sm text-secondary">Wallet connection, dApp development, Anchor programs</span>
+                  <span class="px-1.5 py-0.5 text-xs rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">✓ verified</span>
+                </div>
+              </div>
+              <div class="rounded-lg p-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
+                <div class="flex items-center gap-3">
+                  <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(59, 130, 246, 0.2); color: #60a5fa;">auth</span>
+                  <span class="text-sm text-secondary">NextAuth.js v5 — OAuth, credentials, sessions, protected routes</span>
+                  <span class="px-1.5 py-0.5 text-xs rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">✓ verified</span>
+                </div>
+              </div>
+              <div class="rounded-lg p-4" style="background: rgba(255,255,255,0.03); border: 1px solid #333;">
+                <div class="flex items-center gap-3">
+                  <span class="px-2 py-1 text-xs font-medium rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">stripe</span>
+                  <span class="text-sm text-secondary">Stripe payments — checkout, subscriptions, webhooks, billing</span>
+                  <span class="px-1.5 py-0.5 text-xs rounded" style="background: rgba(34, 197, 94, 0.2); color: #4ade80;">✓ verified</span>
+                </div>
               </div>
             </div>
             <p class="text-sm text-muted">Want to add a skill? <a href="https://github.com/vibekit-apps/skills-registry#contributing-a-skill" class="text-white hover:underline">Submit a PR</a> to the registry.</p>
@@ -454,16 +823,124 @@
         <!-- Webhooks -->
         <section id="webhooks" class="mb-16">
           <h2 class="text-2xl font-bold mb-6 text-white">Webhooks</h2>
-          <div class="section-card rounded-xl p-6">
-            <p class="mb-4 text-secondary">Get notified when tasks complete. Include <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">callbackUrl</code> in your task submission.</p>
-            <pre class="p-4 font-mono text-sm mb-4"><code>{
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <p class="mb-4 text-secondary">Get notified when tasks complete. Include <code class="px-1.5 py-0.5 rounded text-sm" style="background: rgba(255,255,255,0.1)">callbackUrl</code> in your task submission.</p>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Callback Payload</p>
+              <pre class="p-4 font-mono text-sm mb-4"><code>{
+  <span class="code-string">"event"</span>: <span class="code-string">"task.complete"</span>,
   <span class="code-string">"taskId"</span>: <span class="code-string">"task_abc123"</span>,
   <span class="code-string">"status"</span>: <span class="code-string">"complete"</span>,
-  <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://myapp.vibekit.bot"</span>
+  <span class="code-string">"result"</span>: {
+    <span class="code-string">"summary"</span>: <span class="code-string">"Built landing page with hero and email form"</span>,
+    <span class="code-string">"commitUrl"</span>: <span class="code-string">"https://github.com/vibekit-apps/project-xxx/commit/abc123"</span>,
+    <span class="code-string">"deployUrl"</span>: <span class="code-string">"https://project.vibekit.bot"</span>
+  }
 }</code></pre>
-            <div class="rounded-lg p-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3)">
-              <p class="text-sm" style="color: #fbbf24;"><strong>Signature Verification:</strong> Webhooks include <code class="px-1 rounded" style="background: rgba(251, 191, 36, 0.2)">X-VibeKit-Signature</code> header. Verify with HMAC-SHA256 using your API key.</p>
+              <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Headers</p>
+              <table class="param-table mb-4">
+                <tbody>
+                  <tr><td>X-VibeKit-Signature</td><td></td><td>HMAC-SHA256 signature for verification (using your API key)</td></tr>
+                  <tr><td>X-VibeKit-Event</td><td></td><td>Event type (e.g. <code>task.complete</code>)</td></tr>
+                  <tr><td>X-VibeKit-Delivery</td><td></td><td>Unique delivery ID</td></tr>
+                </tbody>
+              </table>
+              <div class="rounded-lg p-4" style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3)">
+                <p class="text-sm" style="color: #fbbf24;"><strong>Retries:</strong> Webhooks retry up to 3 times with exponential backoff on failure.</p>
+              </div>
             </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Test Webhook</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/webhook-test</code>
+              </div>
+              <p class="text-sm text-secondary mb-3">Send a test webhook payload to verify your endpoint is working correctly.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"callbackUrl"</span>: <span class="code-string">"https://your-server.com/webhook"</span>
+}</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Activity Feed -->
+        <section id="events" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Activity Feed</h2>
+          <div class="section-card rounded-xl p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+              <code class="text-sm font-mono text-muted">/api/v1/hosting/events</code>
+            </div>
+            <p class="text-sm text-secondary mb-3">Returns a chronological feed of hosting events — deployments, restarts, domain changes, agent activity, and more.</p>
+            <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"events"</span>: [
+    {
+      <span class="code-string">"type"</span>: <span class="code-string">"deploy"</span>,
+      <span class="code-string">"appId"</span>: <span class="code-string">"app_abc123"</span>,
+      <span class="code-string">"message"</span>: <span class="code-string">"Deployed my-app from owner/repo"</span>,
+      <span class="code-string">"timestamp"</span>: <span class="code-string">"2026-02-12T20:30:00Z"</span>
+    }
+  ]
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Feedback -->
+        <section id="feedback" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Feedback</h2>
+          <div class="section-card rounded-xl p-6">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+              <code class="text-sm font-mono text-muted">/api/v1/feedback</code>
+            </div>
+            <p class="text-sm text-secondary mb-3">Submit feedback, bug reports, or feature requests.</p>
+            <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"message"</span>: <span class="code-string">"Great product! Would love to see Python support."</span>,
+  <span class="code-string">"type"</span>: <span class="code-string">"feature-request"</span>  <span class="code-comment">// feedback | bug | feature-request</span>
+}</code></pre>
+          </div>
+        </section>
+
+        <!-- Errors -->
+        <section id="errors" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Error Codes</h2>
+          <div class="section-card rounded-xl overflow-hidden">
+            <table class="w-full">
+              <thead style="background: rgba(255,255,255,0.03)">
+                <tr>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Code</th>
+                  <th class="text-left px-6 py-3 text-xs font-semibold uppercase text-muted">Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">200</td><td class="px-6 py-3 text-secondary">Success</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">201</td><td class="px-6 py-3 text-secondary">Task created</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">202</td><td class="px-6 py-3 text-secondary">Accepted (async processing)</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">400</td><td class="px-6 py-3 text-secondary">Bad request — missing or invalid parameters</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">401</td><td class="px-6 py-3 text-secondary">Invalid or missing API key</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">402</td><td class="px-6 py-3 text-secondary">Insufficient balance or plan limit reached</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">404</td><td class="px-6 py-3 text-secondary">Resource not found</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">429</td><td class="px-6 py-3 text-secondary">Rate limited</td></tr>
+                <tr style="border-top: 1px solid #222"><td class="px-6 py-3 font-mono text-white">500</td><td class="px-6 py-3 text-secondary">Internal server error</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="section-card rounded-xl p-6 mt-4">
+            <p class="text-xs text-muted mb-2 font-semibold uppercase tracking-wide">Error Response Format</p>
+            <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"error"</span>: <span class="code-string">"Human readable message"</span>,
+  <span class="code-string">"code"</span>: <span class="code-string">"INSUFFICIENT_BALANCE"</span>
+}</code></pre>
+            <p class="text-sm text-secondary mt-3">Rate limit responses include these headers:</p>
+            <table class="param-table mt-2">
+              <tbody>
+                <tr><td>X-RateLimit-Limit</td><td></td><td>Max requests per window</td></tr>
+                <tr><td>X-RateLimit-Remaining</td><td></td><td>Requests left in window</td></tr>
+                <tr><td>X-RateLimit-Reset</td><td></td><td>Unix timestamp when window resets</td></tr>
+                <tr><td>Retry-After</td><td></td><td>Seconds to wait (only on 429)</td></tr>
+              </tbody>
+            </table>
           </div>
         </section>
 
@@ -493,41 +970,84 @@
           <h2 class="text-2xl font-bold mb-6 text-white">Pricing</h2>
           
           <div class="grid gap-4 mb-6" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="section-card rounded-xl p-6 text-center">
-              <h3 class="font-semibold text-white mb-1">Free</h3>
-              <p class="text-3xl font-bold text-white mb-2">$0</p>
-              <p class="text-sm text-muted">3 sessions/mo</p>
-              <p class="text-sm text-muted">10 req/min</p>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold text-white mb-1 text-center">Free</h3>
+              <p class="text-3xl font-bold text-white mb-3 text-center">$0</p>
+              <ul class="space-y-2 text-sm text-secondary">
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 3 sessions/mo</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 1 hosted app</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 256MB memory</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 10 req/min</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 0 custom domains</li>
+              </ul>
             </div>
-            <div class="section-card rounded-xl p-6 text-center" style="border-color: #444;">
-              <h3 class="font-semibold text-white mb-1">Builder</h3>
-              <p class="text-3xl font-bold text-white mb-2">$19<span class="text-sm font-normal text-muted">/mo</span></p>
-              <p class="text-sm text-muted">50 sessions/mo</p>
-              <p class="text-sm text-muted">30 req/min</p>
+            <div class="section-card rounded-xl p-6" style="border-color: #444;">
+              <h3 class="font-semibold text-white mb-1 text-center">Builder</h3>
+              <p class="text-3xl font-bold text-white mb-3 text-center">$19<span class="text-sm font-normal text-muted">/mo</span></p>
+              <ul class="space-y-2 text-sm text-secondary">
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 50 sessions/mo</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 3 hosted apps</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 256MB memory</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 30 req/min</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 1 custom domain</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> $0.35/session overage</li>
+              </ul>
             </div>
-            <div class="section-card rounded-xl p-6 text-center" style="border-color: #555;">
-              <h3 class="font-semibold text-white mb-1">Pro</h3>
-              <p class="text-3xl font-bold text-white mb-2">$49<span class="text-sm font-normal text-muted">/mo</span></p>
-              <p class="text-sm text-muted">200 sessions/mo</p>
-              <p class="text-sm text-muted">60 req/min</p>
+            <div class="section-card rounded-xl p-6" style="border-color: #555;">
+              <h3 class="font-semibold text-white mb-1 text-center">Pro</h3>
+              <p class="text-3xl font-bold text-white mb-3 text-center">$49<span class="text-sm font-normal text-muted">/mo</span></p>
+              <ul class="space-y-2 text-sm text-secondary">
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 200 sessions/mo</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 10 hosted apps</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 512MB memory</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> 60 req/min</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> Unlimited domains</li>
+                <li class="flex items-center gap-2"><span class="text-muted">•</span> $0.25/session overage</li>
+              </ul>
             </div>
           </div>
 
-          <div class="section-card rounded-xl p-6">
-            <h3 class="font-semibold mb-3 text-white">Session Packs</h3>
-            <p class="text-sm text-muted mb-4">Need more sessions? Buy packs anytime — they never expire.</p>
-            <div class="flex gap-4 flex-wrap">
-              <div class="rounded-lg px-4 py-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 100px;">
-                <p class="text-lg font-bold text-white">10</p>
-                <p class="text-sm text-muted">$5</p>
+          <div class="grid gap-4 mb-4" style="grid-template-columns: 1fr 1fr;">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Session Packs</h3>
+              <p class="text-sm text-muted mb-4">Buy extra sessions anytime — they never expire.</p>
+              <div class="flex gap-3 flex-wrap">
+                <div class="rounded-lg px-4 py-3 text-center flex-1" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 80px;">
+                  <p class="text-lg font-bold text-white">10</p>
+                  <p class="text-sm text-muted">$5</p>
+                </div>
+                <div class="rounded-lg px-4 py-3 text-center flex-1" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 80px;">
+                  <p class="text-lg font-bold text-white">30</p>
+                  <p class="text-sm text-muted">$12</p>
+                </div>
+                <div class="rounded-lg px-4 py-3 text-center flex-1" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 80px;">
+                  <p class="text-lg font-bold text-white">100</p>
+                  <p class="text-sm text-muted">$35</p>
+                </div>
               </div>
-              <div class="rounded-lg px-4 py-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 100px;">
-                <p class="text-lg font-bold text-white">30</p>
-                <p class="text-sm text-muted">$12</p>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Container Memory Add-ons</h3>
+              <p class="text-sm text-muted mb-4">Upgrade your app's memory allocation per-container.</p>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between rounded-lg px-4 py-3" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                  <span class="text-white font-medium">512MB</span>
+                  <span class="text-muted text-sm">+$3/mo per app</span>
+                </div>
+                <div class="flex items-center justify-between rounded-lg px-4 py-3" style="background: rgba(255,255,255,0.05); border: 1px solid #333;">
+                  <span class="text-white font-medium">1GB</span>
+                  <span class="text-muted text-sm">+$8/mo per app</span>
+                </div>
               </div>
-              <div class="rounded-lg px-4 py-3 text-center" style="background: rgba(255,255,255,0.05); border: 1px solid #333; min-width: 100px;">
-                <p class="text-lg font-bold text-white">100</p>
-                <p class="text-sm text-muted">$35</p>
+            </div>
+          </div>
+
+          <div class="section-card rounded-xl p-5">
+            <div class="flex items-start gap-3">
+              <span class="text-lg">💡</span>
+              <div>
+                <p class="text-sm text-secondary"><strong class="text-white">BYOK = Free:</strong> Pass your <code class="px-1.5 py-0.5 rounded text-xs" style="background: rgba(255,255,255,0.1)">anthropicApiKey</code> in task requests to use VibeKit at zero cost. You pay Anthropic directly for AI usage — we handle deployment, databases, and domains for free.</p>
               </div>
             </div>
           </div>
@@ -589,7 +1109,7 @@ curl -X POST https://vibekit.bot/api/v1/task \
         <!-- Footer -->
         <footer class="pt-8 mt-16" style="border-top: 1px solid #222">
           <div class="flex items-center justify-between text-sm text-muted">
-            <p>© 2026 VibeKit · Licensed under BSL 1.1</p>
+            <p>&copy; 2026 VibeKit &middot; Licensed under BSL 1.1</p>
             <div class="flex items-center gap-4">
               <a href="https://app.vibekit.bot" class="hover:text-white transition">Dashboard</a>
               <a href="https://discord.gg/clawd" class="hover:text-white transition">Discord</a>
