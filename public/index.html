@@ -192,6 +192,8 @@
             <li><a href="#agent" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">AI Agent</a></li>
             <li><a href="#account" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Account &amp; Billing</a></li>
             <li><a href="#repos" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Repos</a></li>
+            <li><a href="#schedules" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Schedules</a></li>
+            <li><a href="#templates" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Templates</a></li>
             <li><a href="#skills" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Skills</a></li>
             <li><a href="#webhooks" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Webhooks</a></li>
             <li><a href="#events" class="nav-link block py-1.5 px-3 rounded-lg hover:bg-white/5">Activity Feed</a></li>
@@ -767,6 +769,77 @@
   <span class="code-string">"sessionId"</span>: <span class="code-string">"cs_xxx"</span>
 }</code></pre>
             </div>
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Claude API Key</h3>
+              <p class="text-sm text-secondary mb-4">Manage your own Claude API key for free usage (BYOK). Pass your key and skip session costs entirely.</p>
+              
+              <div class="endpoint-group space-y-4">
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/claude-key</code>
+                  </div>
+                  <p class="text-xs text-secondary mb-2">Check if a Claude key is connected.</p>
+                  <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"connected"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"hasKey"</span>: <span class="code-keyword">true</span>,
+  <span class="code-string">"expired"</span>: <span class="code-keyword">false</span>
+}</code></pre>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-put px-2 py-1 text-xs font-mono rounded">PUT</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/claude-key</code>
+                  </div>
+                  <p class="text-xs text-secondary mb-2">Save and verify a Claude API key. Must start with <code class="text-xs">sk-ant-</code>.</p>
+                  <pre class="p-4 font-mono text-sm mb-2"><code>{
+  <span class="code-string">"claudeKey"</span>: <span class="code-string">"sk-ant-api03-xxx"</span>
+}</code></pre>
+                  <p class="text-xs text-muted mb-1 font-semibold uppercase tracking-wide">Response</p>
+                  <pre class="p-4 font-mono text-sm"><code>{ <span class="code-string">"success"</span>: <span class="code-keyword">true</span>, <span class="code-string">"message"</span>: <span class="code-string">"Claude API key saved and verified."</span> }</code></pre>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-delete px-2 py-1 text-xs font-mono rounded">DELETE</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/claude-key</code>
+                  </div>
+                  <p class="text-xs text-secondary">Remove your stored Claude API key.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">GitHub Connection</h3>
+              <p class="text-sm text-secondary mb-4">Link your GitHub account for repo access and automatic deployments.</p>
+              
+              <div class="endpoint-group space-y-4">
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/github</code>
+                  </div>
+                  <p class="text-xs text-secondary">Check GitHub connection status. Returns username if connected.</p>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/github/connect?key=vk_xxx</code>
+                  </div>
+                  <p class="text-xs text-secondary">Starts GitHub OAuth flow. Redirects to GitHub. Pass your API key as query param.</p>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-2 mb-2">
+                    <span class="badge-delete px-2 py-1 text-xs font-mono rounded">DELETE</span>
+                    <code class="text-sm font-mono text-muted">/api/v1/account/github</code>
+                  </div>
+                  <p class="text-xs text-secondary">Disconnect your GitHub account.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -781,6 +854,110 @@
               <code class="text-sm font-mono text-muted">/api/v1/repos</code>
             </div>
             <p class="text-sm text-secondary">Returns the GitHub repositories accessible to your account. Requires GitHub OAuth connection.</p>
+          </div>
+        </section>
+
+        <!-- Schedules -->
+        <section id="schedules" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Schedules</h2>
+          <p class="text-secondary mb-6">Automate recurring tasks. Requires Builder or Pro plan.</p>
+          
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Create Schedule</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-post px-2 py-1 text-xs font-mono rounded">POST</span>
+                <code class="text-sm font-mono text-muted">/api/v1/schedule</code>
+              </div>
+              <pre class="p-4 font-mono text-sm mb-3"><code>{
+  <span class="code-string">"prompt"</span>: <span class="code-string">"Update dependencies and fix any breaking changes"</span>,
+  <span class="code-string">"repo"</span>: <span class="code-string">"user/my-app"</span>,
+  <span class="code-string">"interval"</span>: <span class="code-string">"weekly"</span>,   <span class="code-comment">// hourly | daily | weekly | cron expression</span>
+  <span class="code-string">"deploy"</span>: <span class="code-keyword">true</span>          <span class="code-comment">// auto-commit &amp; push (default: true)</span>
+}</code></pre>
+              <table class="param-table">
+                <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+                <tbody>
+                  <tr><td>prompt</td><td>string</td><td>Task description (required)</td></tr>
+                  <tr><td>repo</td><td>string</td><td>GitHub repo in owner/name format (required)</td></tr>
+                  <tr><td>interval</td><td>string</td><td>hourly, daily, weekly, or a 5-part cron expression (required)</td></tr>
+                  <tr><td>deploy</td><td>boolean</td><td>Auto-commit and push changes (default: true)</td></tr>
+                </tbody>
+              </table>
+              <p class="text-xs text-muted mt-3 font-semibold uppercase tracking-wide">Response</p>
+              <pre class="p-4 font-mono text-sm mt-2"><code>{
+  <span class="code-string">"scheduleId"</span>: <span class="code-string">"abc-123"</span>,
+  <span class="code-string">"status"</span>: <span class="code-string">"active"</span>,
+  <span class="code-string">"interval"</span>: <span class="code-string">"0 9 * * 1"</span>,
+  <span class="code-string">"nextRun"</span>: <span class="code-string">"2026-02-19T09:00:00.000Z"</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">List Schedules</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/schedules</code>
+              </div>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"schedules"</span>: [{
+    <span class="code-string">"scheduleId"</span>: <span class="code-string">"abc-123"</span>,
+    <span class="code-string">"name"</span>: <span class="code-string">"Update dependencies and fix any br..."</span>,
+    <span class="code-string">"repo"</span>: <span class="code-string">"user/my-app"</span>,
+    <span class="code-string">"interval"</span>: <span class="code-string">"0 9 * * 1"</span>,
+    <span class="code-string">"enabled"</span>: <span class="code-keyword">true</span>,
+    <span class="code-string">"lastRun"</span>: <span class="code-keyword">null</span>,
+    <span class="code-string">"nextRun"</span>: <span class="code-string">"2026-02-19T09:00:00.000Z"</span>,
+    <span class="code-string">"runCount"</span>: <span class="code-number">0</span>
+  }]
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Delete Schedule</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-delete px-2 py-1 text-xs font-mono rounded">DELETE</span>
+                <code class="text-sm font-mono text-muted">/api/v1/schedule/:scheduleId</code>
+              </div>
+              <p class="text-sm text-secondary">Cancels and removes a scheduled task.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Templates -->
+        <section id="templates" class="mb-16">
+          <h2 class="text-2xl font-bold mb-6 text-white">Templates</h2>
+          <p class="text-secondary mb-6">Pre-built project scaffolds to jumpstart tasks. No auth required.</p>
+          
+          <div class="space-y-6">
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">List Templates</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/templates</code>
+              </div>
+              <p class="text-sm text-secondary mb-2">Optional query: <code class="text-xs">?category=web</code> to filter by category.</p>
+              <pre class="p-4 font-mono text-sm"><code>{
+  <span class="code-string">"templates"</span>: [{
+    <span class="code-string">"id"</span>: <span class="code-string">"landing"</span>,
+    <span class="code-string">"name"</span>: <span class="code-string">"Landing Page"</span>,
+    <span class="code-string">"description"</span>: <span class="code-string">"Modern landing page with hero, features, CTA"</span>,
+    <span class="code-string">"category"</span>: <span class="code-string">"web"</span>,
+    <span class="code-string">"suggestedFeatures"</span>: [<span class="code-string">"Hero section"</span>, <span class="code-string">"Feature grid"</span>],
+    <span class="code-string">"estimatedTime"</span>: <span class="code-string">"2-3 min"</span>
+  }],
+  <span class="code-string">"usage"</span>: <span class="code-string">"Include \"template\": \"&lt;id&gt;\" in POST /api/v1/task to use a template"</span>
+}</code></pre>
+            </div>
+
+            <div class="section-card rounded-xl p-6">
+              <h3 class="font-semibold mb-3 text-white">Get Template</h3>
+              <div class="flex items-center gap-2 mb-3">
+                <span class="badge-get px-2 py-1 text-xs font-mono rounded">GET</span>
+                <code class="text-sm font-mono text-muted">/api/v1/templates/:id</code>
+              </div>
+              <p class="text-sm text-secondary">Returns full template details including file structure and config.</p>
+            </div>
           </div>
         </section>
 
